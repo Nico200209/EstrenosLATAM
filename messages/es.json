@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "title": "Estrenos LATAM — Del contenido global a resultados reales en cada mercado",
+    "description": "Partner estratégico-operativo especializado en ejecución y optimización de distribución de contenido audiovisual en Centroamérica, Panamá y el Caribe."
+  },
+  "nav": {
+    "home": "Inicio",
+    "about": "Nosotros",
+    "services": "Servicios",
+    "markets": "Mercados",
+    "partners": "Partners",
+    "insights": "Insights",
+    "contact": "Contacto"
+  },
+  "home": {
+    "heroEyebrow": "Estrenos LATAM",
+    "heroTitle": "Del contenido global a resultados reales en cada mercado.",
+    "heroSubtitle": "Convertimos estrategia de distribución en ejecución precisa — desde la planificación hasta la entrega final en sala.",
+    "heroCta": "Hablemos de tu próximo estreno"
+  }
+}

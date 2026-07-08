@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "title": "Estrenos LATAM — From global content to real results in every market",
+    "description": "A strategic-operational partner specialized in execution and distribution optimization for audiovisual content across Central America, Panama, and the Caribbean."
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "markets": "Markets",
+    "partners": "Partners",
+    "insights": "Insights",
+    "contact": "Contact"
+  },
+  "home": {
+    "heroEyebrow": "Estrenos LATAM",
+    "heroTitle": "From global content to real results in every market.",
+    "heroSubtitle": "We turn distribution strategy into precise execution — from planning to final delivery in theaters.",
+    "heroCta": "Talk to us about your next release"
+  }
+}
