@@ -11,6 +11,13 @@
  * mint     = Verde Menta #25F295 (data viz / maps / success — used sparingly)
  * bone     = Blanco Hueso #F2F4F3 (primary light background)
  * carbon   = Negro Carbon #0C0C0C (primary text / dark sections)
+ *
+ * WCAG AA text-contrast rule (audited 2026-07-08, Phase 2):
+ * primary-500 and mint-500 (the literal brand hexes) only pass AA on bone
+ * backgrounds at large-text/UI-component thresholds (3:1) — buttons, icons,
+ * fills, graphics. For small running TEXT on a bone background, step down
+ * the scale: orange text needs primary-700+ (5.48:1), mint text needs
+ * mint-900+ (6.04:1). Both hexes pass comfortably as text on carbon.
  */
 @theme {
   --color-primary-50: #fff4f0;
@@ -60,6 +67,33 @@
   --color-carbon-800: #171717;
   --color-carbon-900: #0c0c0c;
   --color-carbon-950: #050505;
+
+  /*
+   * Type scale (finalized Phase 2). Values are desktop sizes; display/h1/h2
+   * are large enough to need a mobile-down override at the call site, e.g.
+   * `text-[2.75rem] md:text-display` — see CLAUDE.md §10 for the convention.
+   */
+  --text-display: 5.5rem;
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.02em;
+  --text-h1: 3.5rem;
+  --text-h1--line-height: 1.08;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h2: 2.25rem;
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h3: 1.5rem;
+  --text-h3--line-height: 1.25;
+  --text-body: 1.125rem;
+  --text-body--line-height: 1.6;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+  --text-button: 0.875rem;
+  --text-button--line-height: 1.2;
+  --text-button--letter-spacing: 0.02em;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.4;
+  --text-caption--letter-spacing: 0.04em;
 }
 
 @theme inline {
@@ -97,6 +131,7 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-text-muted: var(--text-muted);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -118,13 +153,13 @@
   --secondary: var(--color-bone-200);
   --secondary-foreground: var(--color-carbon-900);
   --muted: var(--color-bone-200);
-  --muted-foreground: var(--color-bone-600);
+  --muted-foreground: var(--color-bone-700);
   --accent: var(--color-mint-500);
   --accent-foreground: var(--color-carbon-900);
   --destructive: oklch(0.577 0.245 27.325);
   --border: var(--color-bone-300);
   --input: var(--color-bone-300);
-  --ring: var(--color-primary-400);
+  --ring: var(--color-primary-600);
   --chart-1: var(--color-primary-500);
   --chart-2: var(--color-mint-500);
   --chart-3: var(--color-bone-600);
@@ -138,7 +173,8 @@
   --sidebar-accent: var(--color-bone-200);
   --sidebar-accent-foreground: var(--color-carbon-900);
   --sidebar-border: var(--color-bone-300);
-  --sidebar-ring: var(--color-primary-400);
+  --sidebar-ring: var(--color-primary-600);
+  --text-muted: var(--color-bone-700);
 }
 
 .dark {
@@ -159,7 +195,7 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: color-mix(in oklch, var(--color-bone-50) 12%, transparent);
   --input: color-mix(in oklch, var(--color-bone-50) 16%, transparent);
-  --ring: var(--color-primary-400);
+  --ring: var(--color-primary-600);
   --chart-1: var(--color-primary-500);
   --chart-2: var(--color-mint-500);
   --chart-3: var(--color-bone-500);
@@ -172,7 +208,8 @@
   --sidebar-accent: var(--color-carbon-700);
   --sidebar-accent-foreground: var(--color-bone-100);
   --sidebar-border: color-mix(in oklch, var(--color-bone-50) 12%, transparent);
-  --sidebar-ring: var(--color-primary-400);
+  --sidebar-ring: var(--color-primary-600);
+  --text-muted: var(--color-carbon-300);
 }
 
 @layer base {

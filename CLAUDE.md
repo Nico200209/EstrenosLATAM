@@ -105,22 +105,26 @@ Each has a full 50–950 scale (see `globals.css`). shadcn semantic tokens (`--b
 
 **Rule**: most pages should read as Bone White + Carbon Black, with Orange used only at intentional decision points, and Mint appearing only in maps/data-viz/growth moments — never as a general accent wash.
 
+**Text-contrast rule (WCAG AA audit, Phase 2, 2026-07-08)**: `primary-500` and `mint-500` (the literal brand hexes) only pass AA at the large-text/UI-component threshold (3:1) — correct for buttons, icons, fills, and graphics. For small running **text** on a bone background, step down the scale: orange text needs `primary-700`+ (5.48:1), mint text needs `mint-900`+ (6.04:1). Both hexes pass comfortably as text on carbon backgrounds (13.2:1 / 17.7:1+). Never use `primary-500`/`mint-500` for small body copy on bone. See the live audit at `/[locale]/design-system` (temporary Phase 2 review page, deleted at Phase 3 — see §30).
+
 ## 10. Typography
 
-**Font**: Public Sans, loaded via `next/font/local` once licensed files are supplied (see §17 Known Decisions for the current temporary state and exact swap-in code).
+**Font**: Public Sans, self-hosted via `next/font/local` (`src/lib/fonts.ts`), all 9 weights + italics loaded under `--font-sans`.
 
-Scale (to be finalized visually in Phase 2, initial values):
+**Scale — finalized Phase 2.** Implemented as named tokens in `src/app/globals.css` `@theme` (`--text-display`, `--text-h1`, … each with a paired line-height and, where relevant, letter-spacing — Tailwind v4 auto-generates the matching `text-{role}` utility). Token values below are the **desktop** size; `display`/`h1`/`h2` are large enough to need a mobile-down override at the call site (convention: mobile-first with a `md:` bump, e.g. `text-[2.75rem] md:text-display`) rather than a second token namespace. `h3`/`body`/`small`/`button`/`caption` don't need the responsive jump.
 
-| Role    | Size (rem/px)           | Weight  | Tracking                      |
-| ------- | ----------------------- | ------- | ----------------------------- |
-| Display | 4.5–6rem (72–96px)      | 600     | tight                         |
-| H1      | 3–3.75rem (48–60px)     | 600     | tight                         |
-| H2      | 2.25rem (36px)          | 600     | tight                         |
-| H3      | 1.5rem (24px)           | 600     | normal                        |
-| Body    | 1rem–1.125rem (16–18px) | 400     | normal                        |
-| Small   | 0.875rem (14px)         | 400–500 | normal                        |
-| Button  | 0.875rem (14px)         | 600     | wide (uppercase eyebrow only) |
-| Caption | 0.75rem (12px)          | 500     | wide                          |
+| Role      | Mobile size/line-height | Desktop token value | Weight  | Tracking                        |
+| --------- | ----------------------- | ------------------- | ------- | ------------------------------- |
+| `display` | 2.75rem/1.05            | 5.5rem/1.02         | 600     | -0.02em                         |
+| `h1`      | 2.25rem/1.1             | 3.5rem/1.08         | 600     | -0.02em                         |
+| `h2`      | 1.75rem/1.15            | 2.25rem/1.15        | 600     | -0.01em                         |
+| `h3`      | 1.375rem/1.25           | same                | 600     | normal                          |
+| `body`    | 1rem/1.6                | 1.125rem/1.6        | 400     | normal                          |
+| `small`   | 0.875rem/1.5            | same                | 400–500 | normal                          |
+| `button`  | 0.875rem/1.2            | same                | 600     | 0.02em (uppercase eyebrow only) |
+| `caption` | 0.75rem/1.4             | same                | 500     | 0.04em                          |
+
+No `<Heading>`/`<Text>` wrapper components exist — these are raw utility classes (`text-display`, `text-h1`, etc.); whether to wrap them in components is a Phase 3+ decision.
 
 ## 11. Spacing Rules
 
@@ -129,10 +133,16 @@ Tailwind's default spacing scale (0.25rem/4px increments) is used, but **all lay
 ## 12. Animation Guidelines
 
 - Library: **Motion** (`motion` package, formerly Framer Motion).
-- Patterns to use: fade, slide, staggered reveal, scroll-linked reveal, text reveal, count-up statistics, animated route-line/map draws, magnetic buttons, animated underlines.
+- Reusable variants live in `src/lib/motion.ts`: `fadeIn`, `fadeInUp`, `fadeInDown`, `slideInLeft`, `slideInRight`, `staggerContainer` (parent), `textReveal` (per-word/char), `scrollReveal` (pair with `whileInView="visible"` + `viewport={{ once: true, margin: "-80px" }}`).
+- Route-line-draw, magnetic-buttons, and animated-underlines are intentionally NOT in `motion.ts` — they need concrete geometry/pointer logic tied to a specific component; implement them where first needed (e.g. Hero/Markets in Phase 3/4+).
+- Count-up statistics: `src/hooks/use-count-up.ts`.
+- Respect `prefers-reduced-motion` via the single shared hook `src/hooks/use-reduced-motion.ts` (`useReducedMotionPreference()`) — every animated component branches its transition through this, never re-implements the media-query check.
 - Parallax used sparingly, only where it reinforces depth (e.g., hero background vs. foreground type).
-- Respect `prefers-reduced-motion` — every non-essential animation must have a reduced/no-motion fallback.
 - Animations narrate the brand story (global → local, strategy → execution); they are never decoration for its own sake.
+
+**Icon convention** (lucide-react, documentation only — no wrapper component): default size 16px (`size-4`) inline with small/body text, 20px (`size-5`) inline with h3+, 24px (`size-6`) standalone/decorative. `strokeWidth` 2 default; use `1.5` for standalone icons 24px+. Icons always inherit `currentColor` — never hardcode icon fill/stroke.
+
+**Responsive breakpoints**: Tailwind v4 defaults (`sm:640 md:768 lg:1024 xl:1280 2xl:1536`) — no custom breakpoints added. Revisit only if a specific page genuinely needs one.
 
 ## 13. SEO Guidelines
 
@@ -143,11 +153,16 @@ Tailwind's default spacing scale (0.25rem/4px increments) is used, but **all lay
 
 ## 14. Accessibility Rules
 
-- WCAG AA minimum contrast, verified against the brand palette (orange-on-bone and bone-on-carbon pairings checked in Phase 2).
-- Full keyboard navigation, visible focus states (shadcn's `--ring` token wired to `primary-400`).
+- WCAG AA minimum contrast — full audit run in Phase 2 (2026-07-08), results:
+  - `--muted-foreground` was failing AA (`bone-600` on `bone-100/200`, 3.51/3.18:1) — fixed to `bone-700` (5.24/4.75:1).
+  - Focus ring (`--ring`) was failing the 3:1 UI-component threshold (`primary-400`, 2.56:1) — fixed to `primary-600` (4.04:1). Applied to `--ring` and `--sidebar-ring`, light and dark.
+  - Small orange/mint running text on bone needs the darker `primary-700`+/`mint-900`+ shades, not the base brand hex — see §9's text-contrast rule.
+  - Bone-on-carbon and mint-on-carbon pairings all pass comfortably (13–20:1) with no changes needed.
+  - Live swatch audit with pass/fail badges: `/[locale]/design-system` (temporary, see §30).
+- Full keyboard navigation, visible focus states (shadcn's `--ring` token, now `primary-600`).
 - Semantic landmarks, ARIA labels where native semantics are insufficient.
-- Every animation has a reduced-motion equivalent.
-- Accessible, labeled forms (React Hook Form + Zod validation with inline error messaging, not color-only).
+- Every animation has a reduced-motion equivalent (`src/hooks/use-reduced-motion.ts`).
+- Accessible, labeled forms: `src/components/ui/{label,form-field}.tsx` wrap Base UI's `Field` primitives (Root/Label/Description/Error) so React Hook Form + Zod forms get accessible wiring (label association, `aria-invalid`, error announcement) without re-deriving it per form.
 
 ## 15. Coding Standards
 
@@ -165,10 +180,11 @@ Tailwind's default spacing scale (0.25rem/4px increments) is used, but **all lay
 ```
 src/
   app/
-    globals.css              Tailwind v4 theme (@theme block: brand color scales, shadcn tokens)
+    globals.css              Tailwind v4 theme (@theme: color scales, type scale, shadcn tokens)
     [locale]/
       layout.tsx              Locale root layout (html/body, NextIntlClientProvider, fonts)
       page.tsx                 Home (currently a Phase-1 placeholder; real build in Phase 4)
+      (dev)/design-system/     Phase 2 style-guide review page — TEMPORARY, delete at Phase 3 kickoff
       about/                   (Phase 5)
       services/                (Phase 6)
       markets/                 (Phase 7)
@@ -176,16 +192,20 @@ src/
       insights/                (Phase 9)
       contact/                 (Phase 10)
   components/
-    ui/                       shadcn primitives (e.g. button.tsx)
-    shared/                   Cross-page composites: Header, Footer, CTASection, LocaleSwitcher (Phase 2/3)
+    ui/                       shadcn/Base UI primitives: button, input, textarea, label, form-field, card
+    shared/                   Cross-page composites: Header, Footer, CTASection, LocaleSwitcher (Phase 3)
     sections/                 Page-specific sections: Hero, PillarsGrid, MarketMap, StatsBand… (Phase 4+)
   content/                    Structural placeholder data seeded from the brand doc (pillars.ts, services.ts, markets.ts)
+  hooks/
+    use-reduced-motion.ts      Shared prefers-reduced-motion check (wraps Motion's useReducedMotion)
+    use-count-up.ts            Count-up number animation hook (Home stats band)
   i18n/
     routing.ts                next-intl locale config (es default, en secondary; always-prefixed URLs)
     navigation.ts              Locale-aware Link/redirect/usePathname/useRouter
     request.ts                 next-intl server request config
   lib/
     fonts.ts                   Public Sans font loader (next/font/local, all 9 weights x normal/italic)
+    motion.ts                  Reusable Motion variants (fadeIn, staggerContainer, textReveal, etc.)
     utils.ts                   cn() helper (shadcn-provided)
   types/
     content.ts                 Pillar/Service/Market types
@@ -216,9 +236,9 @@ Licensed Public Sans files were uploaded to `public/fonts/` on 2026-07-08 (full 
 
 ## 18. Roadmap (13 phases, stop-gate after each)
 
-1. **Brand analysis + CLAUDE.md + roadmap + sitemap + user flows + IA + project scaffolding** — ✅ this phase.
-2. Design System (typography, spacing, colors, buttons, forms, cards, animation primitives, icons, responsive rules).
-3. Reusable UI components.
+1. **Brand analysis + CLAUDE.md + roadmap + sitemap + user flows + IA + project scaffolding** — ✅ complete.
+2. **Design System (typography, spacing, colors, buttons, forms, cards, animation primitives, icons, responsive rules)** — ✅ complete.
+3. Reusable UI components (Header, Footer, Nav, LocaleSwitcher, CTASection — the full composite library).
 4. Homepage.
 5. About.
 6. Services.
@@ -303,26 +323,36 @@ locales: `es` (default), `en`. `localePrefix: "always"` — every route is expli
 - Verified: `npm run build`, `npm run lint`, `npm run typecheck` all pass clean; dev server renders correct localized hero copy at `/es` and `/en`, with `/` redirecting to `/es`.
 - Licensed Public Sans font family uploaded to `public/fonts/` (2026-07-08) and wired via `next/font/local` in `src/lib/fonts.ts` — all 9 weights + italics registered; verified in dev server response headers (18 woff2 files preloaded).
 - Logo asset library (22 PNGs) uploaded 2026-07-08, visually inspected file-by-file, and sorted into `public/images/logo/{lockup,lockup-stacked,mark,bracket,decorative}/` with a full manifest at `public/images/logo/README.md`. Primary logo: `lockup/black-orange.png`; favicon/app-icon source: `mark/black-orange.png`.
+- **Phase 2 — Design System (2026-07-08):**
+  - Type scale finalized as 8 named tokens in `globals.css` `@theme` (§10).
+  - WCAG AA contrast audit run; fixed `--muted-foreground` (bone-600→bone-700) and `--ring`/`--sidebar-ring` (primary-400→primary-600); added `--color-text-muted` alias; documented the orange/mint small-text contrast rule (§9/§14).
+  - Built `src/components/ui/{input,textarea,label,form-field,card}.tsx` — Base UI `Field`/`Input` primitives + cva, following `button.tsx`'s established pattern.
+  - Built `src/lib/motion.ts` (8 reusable Motion variants) + `src/hooks/{use-reduced-motion,use-count-up}.ts`.
+  - Built temporary review page `src/app/[locale]/(dev)/design-system/` — type scale, color swatches with live pass/fail contrast badges, all Button variants/sizes, form fields with error state, Card, and 3 Motion demos. Verified visually via Playwright screenshots in both locales.
+  - Verified: `npm run build`, `npm run lint`, `npm run typecheck`, `npm run format` all pass clean.
 
 ## 27. Current Task
 
-Phase 1 complete, pending user review/approval before Phase 2 (Design System) begins.
+Phase 2 complete, pending user review/approval before Phase 3 (reusable UI component library) begins.
 
 ## 28. Pending Tasks
 
-- Phase 2: formalize the design system (typography scale in code, spacing utilities, color usage rules, button/form/card variants, animation primitives, icon usage, responsive breakpoints).
-- Phase 3 onward per roadmap (§18).
+- Phase 3: build the full reusable component library (Header, Footer, Nav, LocaleSwitcher, CTASection) — and delete the temporary `(dev)/design-system` route once real pages make review possible without it.
+- Phase 4 onward per roadmap (§18).
 
 ## 29. Changelog
 
 - **2026-07-08** — Phase 1: project scaffolded, brand analysis documented, CLAUDE.md created, i18n routing established, placeholder home page verified in both locales.
 - **2026-07-08** — Public Sans licensed font family uploaded to `public/fonts/` and wired via `next/font/local`, replacing the temporary Google Fonts stand-in.
 - **2026-07-08** — Logo asset library (22 PNGs) uploaded, sorted into `public/images/logo/{lockup,lockup-stacked,mark,bracket,decorative}/`, manifest written.
+- **2026-07-08** — Phase 2: type scale finalized, WCAG AA color-contrast bugs fixed, Input/Textarea/Label/FormField/Card primitives + Motion variants/hooks built, temporary design-system review page shipped.
 
 ## 30. Technical Debt
 
-- shadcn `base-nova`/Base UI primitives are unproven for this project's needs — may need to swap style/base library once real component work starts in Phase 2/3.
-- Hand-derived color scale steps (50–950) are not algorithmically generated — worth a perceptual-uniformity pass (e.g., OKLCH-based generation) in Phase 2 if any step looks visually off.
+- shadcn `base-nova`/Base UI primitives are unproven for this project's needs — may need to swap style/base library once real component work starts in Phase 3.
+- Hand-derived color scale steps (50–950) are not algorithmically generated — worth a perceptual-uniformity pass (e.g., OKLCH-based generation) if any step looks visually off once real pages are built.
+- `src/app/[locale]/(dev)/design-system/` is temporary — delete at Phase 3 kickoff once Header/Footer/Nav make the real pages reviewable without it.
+- No automated 8pt-grid spacing enforcement (no lint plugin) — relies on code review; revisit only if spacing drift becomes a recurring issue.
 
 ## 31. Questions for Me
 
