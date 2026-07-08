@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Footer } from "@/components/shared/footer";
+import { Header } from "@/components/shared/header";
 import { routing } from "@/i18n/routing";
 import { publicSans } from "@/lib/fonts";
 import "../globals.css";
@@ -42,7 +44,11 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={`${publicSans.variable} h-full antialiased`}>
       <body className="bg-background text-foreground flex min-h-full flex-col">
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <Header />
+          <main className="flex flex-1 flex-col">{children}</main>
+          <Footer />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

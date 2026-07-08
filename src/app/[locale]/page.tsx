@@ -13,8 +13,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const t = await getTranslations("home");
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-8 px-6 py-24 text-center">
-      <p className="text-primary-500 text-sm font-medium tracking-wide uppercase">
+    <div className="flex flex-1 flex-col items-center justify-center gap-8 px-6 py-24 text-center">
+      <p className="text-primary-700 text-sm font-medium tracking-wide uppercase">
         {t("heroEyebrow")}
       </p>
       <h1 className="text-carbon-900 max-w-3xl text-4xl font-semibold tracking-tight text-balance sm:text-6xl">
@@ -28,6 +28,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         {t("heroCta")}
       </Link>
       <div className="bg-mint-500 mt-6 h-1 w-16 rounded-full" aria-hidden />
-    </main>
+    </div>
   );
 }

@@ -10,7 +10,17 @@
     "markets": "Markets",
     "partners": "Partners",
     "insights": "Insights",
-    "contact": "Contact"
+    "contact": "Contact",
+    "contactCta": "Let's talk",
+    "localeSwitcherLabel": "Change language"
+  },
+  "footer": {
+    "tagline": "From global content to real results in every market.",
+    "navHeading": "Navigation",
+    "contactHeading": "Contact",
+    "contactEmail": "estrenosvf@estrenoslatam.com",
+    "socialHeading": "Follow us",
+    "rightsReserved": "All rights reserved."
   },
   "home": {
     "heroEyebrow": "Estrenos LATAM",

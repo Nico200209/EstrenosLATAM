@@ -174,6 +174,8 @@ Tailwind's default spacing scale (0.25rem/4px increments) is used, but **all lay
 - `lucide-react` for icons; `motion` for animation; `clsx` + `tailwind-merge` via the `cn()` helper in `src/lib/utils.ts` (shadcn-provided) for conditional classes.
 - No duplicated logic — shared UI goes in `src/components/ui` (shadcn primitives) or `src/components/shared` (cross-page composites); page-specific sections go in `src/components/sections`.
 - Prettier (with `prettier-plugin-tailwindcss` for class sorting) is the formatting authority — run `npm run format` before committing.
+- Any fixed-aspect-ratio `next/image` (logos especially) placed inside a `flex-col` container needs `items-start`/`self-start` on that container — flexbox's default `align-items: stretch` will otherwise distort it to the column's full width (found in Phase 3, see §26 Changelog).
+- Test new chrome/layout components at tablet-portrait widths (~820–900px), not just mobile/desktop — that's where `md:`-breakpoint nav bars tend to feel cramped before they're wide enough for a full desktop layout (found in Phase 3; Header now switches at `lg:` instead).
 
 ## 16. Folder Structure
 
@@ -182,9 +184,8 @@ src/
   app/
     globals.css              Tailwind v4 theme (@theme: color scales, type scale, shadcn tokens)
     [locale]/
-      layout.tsx              Locale root layout (html/body, NextIntlClientProvider, fonts)
+      layout.tsx              Locale root layout (html/body, NextIntlClientProvider, Header, main, Footer)
       page.tsx                 Home (currently a Phase-1 placeholder; real build in Phase 4)
-      (dev)/design-system/     Phase 2 style-guide review page — TEMPORARY, delete at Phase 3 kickoff
       about/                   (Phase 5)
       services/                (Phase 6)
       markets/                 (Phase 7)
@@ -192,8 +193,8 @@ src/
       insights/                (Phase 9)
       contact/                 (Phase 10)
   components/
-    ui/                       shadcn/Base UI primitives: button, input, textarea, label, form-field, card
-    shared/                   Cross-page composites: Header, Footer, CTASection, LocaleSwitcher (Phase 3)
+    ui/                       shadcn/Base UI primitives: button, input, textarea, label, form-field, card, sheet
+    shared/                   Cross-page composites: header.tsx, footer.tsx, cta-section.tsx, locale-switcher.tsx
     sections/                 Page-specific sections: Hero, PillarsGrid, MarketMap, StatsBand… (Phase 4+)
   content/                    Structural placeholder data seeded from the brand doc (pillars.ts, services.ts, markets.ts)
   hooks/
@@ -226,9 +227,10 @@ assets/
 - **Next.js 16 / Tailwind v4 / React 19** were the versions `create-next-app@latest` installed at project start (2026-07-08). `AGENTS.md` (auto-generated, imported at the top of this file) flags that this Next.js version has breaking changes from training-data expectations — check `node_modules/next/dist/docs/` before assuming an older API.
 - **`next-intl` v4**, App Router pattern: `src/app/[locale]/layout.tsx` _is_ the root layout (no separate `src/app/layout.tsx`) — this is next-intl's documented pattern since there's only one top-level dynamic segment.
 - **Locale strategy**: `es` is the default locale (`localePrefix: "always"`, so both `/es/...` and `/en/...` are explicit — no bare unprefixed route), because the operational home markets (Centroamérica, Panamá, Caribe) are Spanish-speaking; English serves international studio/distributor readers.
-- **shadcn/ui** initialized with style `base-nova` (current CLI default), using `@base-ui/react` primitives rather than Radix — this is the current shadcn CLI's default base, not a deliberate choice against Radix; revisit if `base-ui` proves limiting once real components are built in Phase 2/3.
+- **shadcn/ui** initialized with style `base-nova` (current CLI default), using `@base-ui/react` primitives rather than Radix. Confirmed viable through Phase 3 (Button/Field/Input/Dialog all used successfully for real chrome components) — no longer "unproven," see Technical Debt update.
 - **`middleware.ts` → `src/proxy.ts`**: Next.js 16 deprecated the `middleware.ts` convention in favor of `proxy.ts` (same export shape). Already migrated to avoid the deprecation warning.
 - **Tailwind v4 CSS-first config**: there is no `tailwind.config.ts`; all theme extension (brand color scales) lives in `@theme` blocks inside `src/app/globals.css`. Any future Tailwind plugin config also belongs there, not in a JS/TS config file.
+- **Base UI composition prop is `render`, not `asChild`**: to make `Button` render as a `Link` (or any other element), pass `render={<Link .../>}` — and when the rendered element isn't a real `<button>` (e.g. an anchor), also pass `nativeButton={false}` or Base UI logs a dev-only console warning about lost native button semantics. Established in Phase 3's `Header`/`CTASection`; follow this pattern for any future Button-as-Link composition.
 
 ### Typography — Public Sans, self-hosted
 
@@ -238,7 +240,7 @@ Licensed Public Sans files were uploaded to `public/fonts/` on 2026-07-08 (full 
 
 1. **Brand analysis + CLAUDE.md + roadmap + sitemap + user flows + IA + project scaffolding** — ✅ complete.
 2. **Design System (typography, spacing, colors, buttons, forms, cards, animation primitives, icons, responsive rules)** — ✅ complete.
-3. Reusable UI components (Header, Footer, Nav, LocaleSwitcher, CTASection — the full composite library).
+3. **Reusable UI components (Header, Footer, Nav, LocaleSwitcher, CTASection)** — ✅ complete.
 4. Homepage.
 5. About.
 6. Services.
@@ -330,15 +332,27 @@ locales: `es` (default), `en`. `localePrefix: "always"` — every route is expli
   - Built `src/lib/motion.ts` (8 reusable Motion variants) + `src/hooks/{use-reduced-motion,use-count-up}.ts`.
   - Built temporary review page `src/app/[locale]/(dev)/design-system/` — type scale, color swatches with live pass/fail contrast badges, all Button variants/sizes, form fields with error state, Card, and 3 Motion demos. Verified visually via Playwright screenshots in both locales.
   - Verified: `npm run build`, `npm run lint`, `npm run typecheck`, `npm run format` all pass clean.
+- **Phase 3 — Reusable UI Components (2026-07-08):**
+  - Built `src/components/ui/sheet.tsx` (Base UI `Dialog` wrapper — slide-in mobile nav drawer with focus-trap/Escape/scroll-lock for free).
+  - Built `src/components/shared/{header,footer,locale-switcher,cta-section}.tsx`. Header: sticky with scroll-triggered blur, logo, desktop nav, `LocaleSwitcher`, "Hablemos"/"Let's talk" CTA button, mobile hamburger → `Sheet`. Footer: dark (`carbon-900`) band with white-orange logo variant, nav links, real contact email (`estrenosvf@estrenoslatam.com`), placeholder social links (LinkedIn/Instagram, `href="#"`). `LocaleSwitcher`: two-segment ES/EN toggle (no dropdown — unjustified for 2 locales). `CTASection`: reusable prop-driven banded CTA for Phase 4+ pages.
+  - Added `nav.contactCta`/`nav.localeSwitcherLabel` keys and a new `footer` namespace to `messages/{es,en}.json`.
+  - Wired `Header`/`Footer` into `src/app/[locale]/layout.tsx` around a single `<main>` landmark; fixed `page.tsx`'s now-nested `<main>` → `<div>`.
+  - Fixed a real bug found via dev-server console check: Base UI logged a `nativeButton` warning when `Button` composed with `render={<Link/>}` — fixed by passing `nativeButton={false}` wherever a Button renders as a Link (see §17's new Architecture Decision).
+  - Deleted the temporary `src/app/[locale]/(dev)/design-system/` route (all 3 files) now that Header/Footer make real pages reviewable.
+  - Verified visually via Playwright screenshots: desktop header/footer both locales, mobile menu open/close, locale switch preserving path, no console errors/warnings. `npm run build`, `lint`, `typecheck` all pass clean.
+  - **Two bugs found via user review, fixed 2026-07-08:**
+    1. Footer logo rendered visibly distorted/"ghosted." Root cause: `Footer`'s logo sat in a `flex flex-col` container with no `items-start`, so flexbox's default `align-items: stretch` stretched the `<Image>` to the column's full width while `h-7` fixed its height — distorting the aspect ratio (not a resize-quality issue, despite it initially looking like one). Fixed by adding `items-start` to that container. **Rule going forward: any fixed-aspect-ratio image (especially logos) inside a `flex-col` container needs `items-start`/`self-start`, or the column must not default to `stretch`.**
+    2. Header nav was cramped/overlapping on tablet-portrait widths (~820–900px, e.g. iPad Air). Root cause: the mobile→desktop nav breakpoint was `md:` (768px) — too narrow for 7 nav links + `LocaleSwitcher` + CTA button in one row. Fixed by moving the breakpoint to `lg:` (1024px) in `Header`, so tablets get the mobile hamburger menu instead.
 
 ## 27. Current Task
 
-Phase 2 complete, pending user review/approval before Phase 3 (reusable UI component library) begins.
+Phase 3 complete, pending user review/approval before Phase 4 (Homepage) begins.
 
 ## 28. Pending Tasks
 
-- Phase 3: build the full reusable component library (Header, Footer, Nav, LocaleSwitcher, CTASection) — and delete the temporary `(dev)/design-system` route once real pages make review possible without it.
-- Phase 4 onward per roadmap (§18).
+- Phase 4: build the real Homepage (Hero, Pillars grid, Market visual, Stats/count-up band, Partner logos strip, Insights preview, CTA band using `CTASection`) — first page to consume `src/content/{pillars,services,markets}.ts`.
+- Phase 5 onward per roadmap (§18).
+- Before launch: confirm real footer phone/address (if wanted) and real social media URLs (currently `href="#"` placeholders).
 
 ## 29. Changelog
 
@@ -346,19 +360,22 @@ Phase 2 complete, pending user review/approval before Phase 3 (reusable UI compo
 - **2026-07-08** — Public Sans licensed font family uploaded to `public/fonts/` and wired via `next/font/local`, replacing the temporary Google Fonts stand-in.
 - **2026-07-08** — Logo asset library (22 PNGs) uploaded, sorted into `public/images/logo/{lockup,lockup-stacked,mark,bracket,decorative}/`, manifest written.
 - **2026-07-08** — Phase 2: type scale finalized, WCAG AA color-contrast bugs fixed, Input/Textarea/Label/FormField/Card primitives + Motion variants/hooks built, temporary design-system review page shipped.
+- **2026-07-08** — Phase 3: Header/Footer/LocaleSwitcher/CTASection built and wired into the root layout; Sheet primitive added for mobile nav; temporary design-system page deleted.
 
 ## 30. Technical Debt
 
-- shadcn `base-nova`/Base UI primitives are unproven for this project's needs — may need to swap style/base library once real component work starts in Phase 3.
+- shadcn `base-nova`/Base UI primitives — confirmed working well through Phase 3 (Button/Field/Dialog all used successfully); no longer flagged as unproven.
 - Hand-derived color scale steps (50–950) are not algorithmically generated — worth a perceptual-uniformity pass (e.g., OKLCH-based generation) if any step looks visually off once real pages are built.
-- `src/app/[locale]/(dev)/design-system/` is temporary — delete at Phase 3 kickoff once Header/Footer/Nav make the real pages reviewable without it.
 - No automated 8pt-grid spacing enforcement (no lint plugin) — relies on code review; revisit only if spacing drift becomes a recurring issue.
+- Footer social links (LinkedIn/Instagram) point to `href="#"` placeholders — need real URLs before launch. Footer phone/address were not requested and are omitted entirely (only email is real) — confirm before launch whether they're wanted.
+- `lucide-react` v1.x has no brand/social icons (Linkedin/Instagram etc. were removed) — footer social links render as plain text labels instead of icons; revisit if a brand-icon set is added as a separate dependency later.
 
 ## 31. Questions for Me
 
 1. For the Insights/Blog section (Phase 9): do you want a simple local content source (MDX/JSON in-repo) or a headless CMS integration? Affects Phase 9 architecture decisions.
 2. Do you have real partner/distributor logos and market-specific data (e.g., named exhibitors) ready for Phases 7–8, or should those phases proceed with placeholder structure only?
 3. Any existing domain/hosting target (Vercel vs. other) that should influence performance/deployment assumptions in Phase 12?
+4. ~~Do you want real footer phone/address, and do the LinkedIn/Instagram accounts referenced in the footer already exist?~~ Confirmed 2026-07-08: not needed right now — footer stays with email only and `href="#"` social placeholders; revisit before launch.
 
 ## 32. Improvement Ideas
 
