@@ -26,6 +26,77 @@
     "heroEyebrow": "Estrenos LATAM",
     "heroTitle": "Del contenido global a resultados reales en cada mercado.",
     "heroSubtitle": "Convertimos estrategia de distribución en ejecución precisa — desde la planificación hasta la entrega final en sala.",
-    "heroCta": "Hablemos de tu próximo estreno"
+    "heroCta": "Hablemos de tu próximo estreno",
+    "pillars": {
+      "heading": "Los cinco pilares de nuestra operación",
+      "operationalExecution": {
+        "title": "Ejecución Operativa de Alto Nivel",
+        "description": "Control directo sobre DCP, materiales, logística y coordinación multi-territorio."
+      },
+      "marketIntelligence": {
+        "title": "Inteligencia de Mercado Real",
+        "description": "Decisiones respaldadas por datos, experiencia directa y conocimiento país por país."
+      },
+      "costEfficiency": {
+        "title": "Eficiencia y Control de Costos",
+        "description": "Optimización desde la estrategia hasta el micro-costo operativo."
+      },
+      "strategicConnection": {
+        "title": "Conexión Estratégica",
+        "description": "Acceso a distribuidores, exhibidores y proveedores clave en cada territorio."
+      },
+      "globalLocalTranslation": {
+        "title": "Traducción Global–Local",
+        "description": "Adaptamos la estrategia internacional a la realidad operativa de cada mercado local."
+      }
+    },
+    "marketTeaser": {
+      "eyebrow": "Mercados",
+      "heading": "Un territorio, tres mercados, una sola ejecución.",
+      "body": "Coordinamos Centroamérica, Panamá y el Caribe como una operación conectada, no como envíos aislados.",
+      "cta": "Ver mercados",
+      "centralAmerica": "Centroamérica",
+      "panama": "Panamá",
+      "caribbean": "Caribe"
+    },
+    "stats": {
+      "yearsOperating": { "value": "8", "label": "Años de operación" },
+      "territoriesCovered": { "value": "12", "label": "Territorios cubiertos" },
+      "titlesExecuted": { "value": "150", "label": "Estrenos ejecutados" },
+      "partnerNetwork": { "value": "40", "label": "Socios en la red" }
+    },
+    "partners": {
+      "heading": "Una red de distribución en construcción",
+      "caption": "Ejemplo ilustrativo de la red de partners — nombres reales próximamente.",
+      "placeholder1": "Distribuidor Regional",
+      "placeholder2": "Exhibidor Nacional",
+      "placeholder3": "Cadena Multiplex",
+      "placeholder4": "Proveedor Técnico",
+      "placeholder5": "Distribuidor Independiente"
+    },
+    "insights": {
+      "heading": "Insights",
+      "cta": "Ver todos los insights",
+      "post1": {
+        "title": "Cómo evaluar un partner de distribución en Centroamérica",
+        "excerpt": "Criterios operativos que van más allá del alcance comercial.",
+        "tag": "Estrategia"
+      },
+      "post2": {
+        "title": "DCP y logística: dónde se pierde el margen",
+        "excerpt": "Los puntos de control que definen el resultado final en sala.",
+        "tag": "Operación"
+      },
+      "post3": {
+        "title": "El Caribe como mercado fragmentado — y cómo operarlo",
+        "excerpt": "Coordinación multi-territorio sin perder ejecución local.",
+        "tag": "Mercados"
+      }
+    },
+    "ctaBand": {
+      "heading": "Hablemos de tu próximo estreno.",
+      "subtext": "Contanos qué contenido querés llevar a Centroamérica, Panamá o el Caribe.",
+      "ctaLabel": "Hablemos"
+    }
   }
 }

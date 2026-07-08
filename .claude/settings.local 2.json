@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "Bash(npx --yes create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack --yes)",
+      "Bash(npx --yes create-next-app@latest tmp-scaffold --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack --yes)",
+      "Bash(rsync -a tmp-scaffold/ .)",
+      "Bash(npm install *)",
+      "Bash(npx shadcn@latest init -d)"
+    ]
+  }
+}

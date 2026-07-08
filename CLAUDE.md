@@ -185,7 +185,7 @@ src/
     globals.css              Tailwind v4 theme (@theme: color scales, type scale, shadcn tokens)
     [locale]/
       layout.tsx              Locale root layout (html/body, NextIntlClientProvider, Header, main, Footer)
-      page.tsx                 Home (currently a Phase-1 placeholder; real build in Phase 4)
+      page.tsx                 Home (built Phase 4 — Hero, Pillars, Market teaser, Stats, Partners, Insights, CTA)
       about/                   (Phase 5)
       services/                (Phase 6)
       markets/                 (Phase 7)
@@ -241,7 +241,7 @@ Licensed Public Sans files were uploaded to `public/fonts/` on 2026-07-08 (full 
 1. **Brand analysis + CLAUDE.md + roadmap + sitemap + user flows + IA + project scaffolding** — ✅ complete.
 2. **Design System (typography, spacing, colors, buttons, forms, cards, animation primitives, icons, responsive rules)** — ✅ complete.
 3. **Reusable UI components (Header, Footer, Nav, LocaleSwitcher, CTASection)** — ✅ complete.
-4. Homepage.
+4. **Homepage** — ✅ complete.
 5. About.
 6. Services.
 7. Markets.
@@ -343,15 +343,26 @@ locales: `es` (default), `en`. `localePrefix: "always"` — every route is expli
   - **Two bugs found via user review, fixed 2026-07-08:**
     1. Footer logo rendered visibly distorted/"ghosted." Root cause: `Footer`'s logo sat in a `flex flex-col` container with no `items-start`, so flexbox's default `align-items: stretch` stretched the `<Image>` to the column's full width while `h-7` fixed its height — distorting the aspect ratio (not a resize-quality issue, despite it initially looking like one). Fixed by adding `items-start` to that container. **Rule going forward: any fixed-aspect-ratio image (especially logos) inside a `flex-col` container needs `items-start`/`self-start`, or the column must not default to `stretch`.**
     2. Header nav was cramped/overlapping on tablet-portrait widths (~820–900px, e.g. iPad Air). Root cause: the mobile→desktop nav breakpoint was `md:` (768px) — too narrow for 7 nav links + `LocaleSwitcher` + CTA button in one row. Fixed by moving the breakpoint to `lg:` (1024px) in `Header`, so tablets get the mobile hamburger menu instead.
+- **Phase 4 — Homepage (2026-07-09):**
+  - Design spec written and committed: `docs/superpowers/specs/2026-07-08-phase-4-homepage-design.md`.
+  - Built `src/components/sections/{hero,pillars-grid,market-teaser,stats-band,partners-strip,insights-preview}.tsx`, composed in `src/app/[locale]/page.tsx` with the existing `CTASection` at the bottom, replacing the Phase 1 placeholder hero.
+  - `Hero`: left-aligned type-led layout with a custom SVG open-bracket route-line motif (stroke-draw animation on mount, static under reduced motion) — not a trace of the PNG logo assets, a simplified path in the same visual language, since the shipped logo files are raster PNGs unsuitable for `pathLength` animation.
+  - `PillarsGrid`: 5 pillars from `src/content/pillars.ts` in an asymmetric `1/2/3`-column responsive grid, staggered `fadeInUp` reveal via `staggerContainer`.
+  - `MarketTeaser`: carbon-banded lightweight teaser (not Phase 7's real interactive map) — 3 labeled nodes from `src/content/markets.ts` connected by an animated mint route-line, linking to `/markets`.
+  - `StatsBand`: 4 count-up tiles using existing `use-count-up.ts`, explicit placeholder numbers isolated in one array pending real figures.
+  - `PartnersStrip`/`InsightsPreview`: placeholder content (generic wordmark chips; 3 dummy insight cards) since Phases 8/9 don't exist yet — both explicitly captioned/labeled as illustrative, not implying real partner or article data.
+  - Added `home.{pillars,marketTeaser,stats,partners,insights,ctaBand}` keys to both `messages/es.json` and `messages/en.json`.
+  - Verified: `npm run build`, `lint`, `typecheck`, `format` all pass clean. Visual verification via Playwright screenshots (mobile/tablet/desktop, both locales) plus targeted scroll-triggered checks for `PillarsGrid`/`StatsBand` (full-page screenshots without scrolling show these sections empty/at-zero since their reveal animations are `whileInView`-gated — confirmed working correctly once actually scrolled into view, not a bug). No console errors/warnings in either locale.
 
 ## 27. Current Task
 
-Phase 3 complete, pending user review/approval before Phase 4 (Homepage) begins.
+Phase 4 complete, pending user review/approval before Phase 5 (About) begins.
 
 ## 28. Pending Tasks
 
-- Phase 4: build the real Homepage (Hero, Pillars grid, Market visual, Stats/count-up band, Partner logos strip, Insights preview, CTA band using `CTASection`) — first page to consume `src/content/{pillars,services,markets}.ts`.
-- Phase 5 onward per roadmap (§18).
+- Phase 5 onward per roadmap (§18): About, Services, Markets, Partners, Insights, Contact.
+- Swap `PartnersStrip`/`InsightsPreview` placeholder content for real data once Phases 8/9 build those sections.
+- Swap `StatsBand` placeholder numbers for real figures once available.
 - Before launch: confirm real footer phone/address (if wanted) and real social media URLs (currently `href="#"` placeholders).
 
 ## 29. Changelog
@@ -361,6 +372,7 @@ Phase 3 complete, pending user review/approval before Phase 4 (Homepage) begins.
 - **2026-07-08** — Logo asset library (22 PNGs) uploaded, sorted into `public/images/logo/{lockup,lockup-stacked,mark,bracket,decorative}/`, manifest written.
 - **2026-07-08** — Phase 2: type scale finalized, WCAG AA color-contrast bugs fixed, Input/Textarea/Label/FormField/Card primitives + Motion variants/hooks built, temporary design-system review page shipped.
 - **2026-07-08** — Phase 3: Header/Footer/LocaleSwitcher/CTASection built and wired into the root layout; Sheet primitive added for mobile nav; temporary design-system page deleted.
+- **2026-07-09** — Phase 4: real Homepage built (Hero, Pillars grid, Market teaser, Stats band, Partners strip, Insights preview, CTA band), replacing the Phase 1 placeholder; design spec committed first per the brainstorming workflow.
 
 ## 30. Technical Debt
 
