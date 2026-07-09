@@ -98,5 +98,49 @@
       "subtext": "Contanos qué contenido querés llevar a Centroamérica, Panamá o el Caribe.",
       "ctaLabel": "Hablemos"
     }
+  },
+  "about": {
+    "hero": {
+      "eyebrow": "Nosotros",
+      "title": "Donde otros diseñan o distribuyen, nosotros aseguramos que funcione.",
+      "lede": "Somos el partner estratégico-operativo que convierte contenido global en resultados reales en Centroamérica, Panamá y el Caribe."
+    },
+    "mission": {
+      "quote": "El contenido no falla en el papel. Falla en la ejecución.",
+      "body": "Existimos para garantizar que la estrategia se ejecute, no solo se diseñe: que cada estreno llegue al mercado correcto, en el momento correcto, con una ejecución operativa que maximice su resultado."
+    },
+    "positioning": {
+      "heading": "Posicionamiento ideal",
+      "step1": "Definimos la estrategia de entrada y posicionamiento.",
+      "step2": "Identificamos a los socios de distribución correctos.",
+      "step3": "Controlamos la ejecución real — incluyendo DCP y materiales.",
+      "emphasis": "Donde otros diseñan o distribuyen, nosotros aseguramos que funcione."
+    },
+    "beliefs": {
+      "heading": "Lo que creemos",
+      "belief1": "La ejecución operativa define el resultado final.",
+      "belief2": "La estrategia sin implementación no tiene impacto.",
+      "belief3": "Los detalles operativos son donde se pierde o se gana valor.",
+      "belief4": "La eficiencia no es ahorro: es ventaja competitiva.",
+      "belief5": "La velocidad y precisión operativa generan resultados.",
+      "belief6": "El desconocimiento de acuerdos te puede llevar a perder tus derechos."
+    },
+    "pillarsRecap": {
+      "heading": "La base de cada decisión operativa"
+    },
+    "team": {
+      "heading": "Equipo",
+      "caption": "Perfiles reales próximamente — estructura ilustrativa del equipo.",
+      "role1": "Fundador & CEO",
+      "role2": "Directora de Operaciones"
+    },
+    "brandPromise": {
+      "quote": "Nos aseguramos de que tu contenido no solo tenga una estrategia correcta, sino que se ejecute de forma eficiente y funcione en cada mercado — técnica, operativa y comercialmente."
+    },
+    "ctaBand": {
+      "heading": "Hablemos de tu próximo estreno.",
+      "subtext": "Contanos qué contenido querés llevar a Centroamérica, Panamá o el Caribe.",
+      "ctaLabel": "Hablemos"
+    }
   }
 }

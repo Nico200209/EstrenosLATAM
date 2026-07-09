@@ -8,16 +8,19 @@ import { PILLAR_ICONS } from "@/content/pillar-icons";
 import { useReducedMotionPreference } from "@/hooks/use-reduced-motion";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 
-export function PillarsGrid() {
-  const t = useTranslations("home.pillars");
+export function PillarsRecap() {
+  const t = useTranslations("about.pillarsRecap");
+  const tPillars = useTranslations("home.pillars");
   const reducedMotion = useReducedMotionPreference();
 
   return (
     <section className="px-6 py-16 md:py-24">
       <div className="mx-auto max-w-6xl">
-        <h2 className="text-carbon-900 text-h2 mb-12 max-w-2xl">{t("heading")}</h2>
+        <h2 className="text-carbon-600 text-small mb-8 font-medium tracking-wide uppercase">
+          {t("heading")}
+        </h2>
         <motion.div
-          className="flex flex-wrap justify-center gap-8"
+          className="flex flex-wrap justify-center gap-3"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
@@ -30,11 +33,12 @@ export function PillarsGrid() {
                 key={pillar.id}
                 variants={fadeInUp}
                 transition={reducedMotion ? { duration: 0 } : undefined}
-                className="border-border flex w-full flex-col gap-4 rounded-xl border p-6 sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.334rem)]"
+                className="border-border bg-bone-200 flex items-center gap-2 rounded-full border px-4 py-2"
               >
-                <Icon className="text-primary-500 size-6" strokeWidth={1.5} />
-                <h3 className="text-h3 text-carbon-900">{t(pillar.titleKey)}</h3>
-                <p className="text-body text-carbon-600">{t(pillar.descriptionKey)}</p>
+                <Icon className="text-primary-500 size-4" strokeWidth={2} />
+                <span className="text-carbon-900 text-small font-medium">
+                  {tPillars(pillar.titleKey)}
+                </span>
               </motion.div>
             );
           })}

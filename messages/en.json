@@ -98,5 +98,49 @@
       "subtext": "Tell us what content you want to bring to Central America, Panama, or the Caribbean.",
       "ctaLabel": "Let's talk"
     }
+  },
+  "about": {
+    "hero": {
+      "eyebrow": "About",
+      "title": "Where others design or distribute, we make sure it works.",
+      "lede": "We're the strategic-operational partner that turns global content into real results across Central America, Panama, and the Caribbean."
+    },
+    "mission": {
+      "quote": "Content doesn't fail on paper. It fails in execution.",
+      "body": "We exist to guarantee that strategy gets executed, not just designed: that every release reaches the right market, at the right time, with operational execution that maximizes its result."
+    },
+    "positioning": {
+      "heading": "Ideal positioning",
+      "step1": "We define entry and positioning strategy.",
+      "step2": "We identify the right distribution partners.",
+      "step3": "We control real execution — including DCP and materials.",
+      "emphasis": "Where others design or distribute, we make sure it works."
+    },
+    "beliefs": {
+      "heading": "What we believe",
+      "belief1": "Operational execution defines the final result.",
+      "belief2": "Strategy without implementation has no impact.",
+      "belief3": "Operational details are where value is lost or won.",
+      "belief4": "Efficiency isn't savings: it's competitive advantage.",
+      "belief5": "Operational speed and precision produce results.",
+      "belief6": "Not knowing your agreements can cost you your rights."
+    },
+    "pillarsRecap": {
+      "heading": "The foundation of every operational decision"
+    },
+    "team": {
+      "heading": "Team",
+      "caption": "Real profiles coming soon — illustrative team structure.",
+      "role1": "Founder & CEO",
+      "role2": "Head of Operations"
+    },
+    "brandPromise": {
+      "quote": "We make sure your content doesn't just have the right strategy, but that it's executed efficiently and works in every market — technically, operationally, and commercially."
+    },
+    "ctaBand": {
+      "heading": "Let's talk about your next release.",
+      "subtext": "Tell us what content you want to bring to Central America, Panama, or the Caribbean.",
+      "ctaLabel": "Let's talk"
+    }
   }
 }

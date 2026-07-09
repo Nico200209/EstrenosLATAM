@@ -186,7 +186,7 @@ src/
     [locale]/
       layout.tsx              Locale root layout (html/body, NextIntlClientProvider, Header, main, Footer)
       page.tsx                 Home (built Phase 4 — Hero, Pillars, Market teaser, Stats, Partners, Insights, CTA)
-      about/                   (Phase 5)
+      about/                   Built Phase 5 — Mission, Positioning, Beliefs, Pillars recap, Team placeholder, Brand promise, CTA
       services/                (Phase 6)
       markets/                 (Phase 7)
       partners/                (Phase 8)
@@ -242,7 +242,7 @@ Licensed Public Sans files were uploaded to `public/fonts/` on 2026-07-08 (full 
 2. **Design System (typography, spacing, colors, buttons, forms, cards, animation primitives, icons, responsive rules)** — ✅ complete.
 3. **Reusable UI components (Header, Footer, Nav, LocaleSwitcher, CTASection)** — ✅ complete.
 4. **Homepage** — ✅ complete.
-5. About.
+5. **About** — ✅ complete.
 6. Services.
 7. Markets.
 8. Partners.
@@ -309,8 +309,9 @@ locales: `es` (default), `en`. `localePrefix: "always"` — every route is expli
 ## 25. Future Ideas
 
 - Interactive LATAM map component (Phase 7) could double as a lightweight reusable data-viz primitive for Home's market visual.
-- Consider a "route-line" SVG motif library shared between Hero, Markets, and section dividers instead of one-off illustrations per page.
+- ~~Consider a "route-line" SVG motif library shared between Hero, Markets, and section dividers instead of one-off illustrations per page.~~ Started in Phase 5: `src/lib/route-frame.ts` holds the shared bracket-motif geometry used by Home's and About's Hero — extend this file rather than redefining the shape per page as Markets/other pages pick it up.
 - Insights section could eventually support MDX for richer article authoring — decide in Phase 9.
+- User indicated (2026-07-09) a preference to use the plain `bracket/` mark (not `mark/black-orange.png`) as the eventual favicon/app-icon source — revisit §8/§17's current favicon designation before Phase 11 (SEO/metadata) or whenever a real favicon is implemented.
 
 ## 26. Completed Tasks
 
@@ -353,16 +354,31 @@ locales: `es` (default), `en`. `localePrefix: "always"` — every route is expli
   - `PartnersStrip`/`InsightsPreview`: placeholder content (generic wordmark chips; 3 dummy insight cards) since Phases 8/9 don't exist yet — both explicitly captioned/labeled as illustrative, not implying real partner or article data.
   - Added `home.{pillars,marketTeaser,stats,partners,insights,ctaBand}` keys to both `messages/es.json` and `messages/en.json`.
   - Verified: `npm run build`, `lint`, `typecheck`, `format` all pass clean. Visual verification via Playwright screenshots (mobile/tablet/desktop, both locales) plus targeted scroll-triggered checks for `PillarsGrid`/`StatsBand` (full-page screenshots without scrolling show these sections empty/at-zero since their reveal animations are `whileInView`-gated — confirmed working correctly once actually scrolled into view, not a bug). No console errors/warnings in either locale.
+  - **Two fixes from user review, 2026-07-09:** (1) `PillarsGrid`'s 5-card layout left dead space in the odd last row — switched from `grid` to `flex flex-wrap justify-center` so the trailing row centers itself. (2) `PartnersStrip`/`InsightsPreview` were static Server Components with no reveal animation at all, inconsistent with every other section — converted both to client components using the same `staggerContainer`/`fadeInUp` convention. **Rule going forward: every Home/page section should share the same scroll-reveal treatment unless there's a specific reason not to — a static section reads as a bug once the rest of the page animates.**
+
+- **Phase 5 — About (2026-07-09):**
+  - Design spec written and committed: `docs/superpowers/specs/2026-07-09-phase-5-about-design.md`.
+  - Built `src/app/[locale]/about/page.tsx` and `src/components/sections/{about-hero,mission-statement,positioning,beliefs-list,pillars-recap,team-placeholder,brand-promise}.tsx`, plus the existing `CTASection` (`variant="bone"`, alternating off the carbon `BrandPromise` band right before it).
+  - Content sourced directly from the brand philosophy doc already in `CLAUDE.md` §4: Razón de ser + Propósito (`MissionStatement`), Posicionamiento ideal as 3 numbered steps (`Positioning`), the 6 Creencias as a plain ruled list (`BeliefsList`, deliberately not cards — kept restrained per §5's brand voice), Promesa de marca (`BrandPromise`).
+  - `PillarsRecap` reuses `src/content/pillars.ts` and a newly extracted `src/content/pillar-icons.ts` (icon map pulled out of `pillars-grid.tsx` so both Home's full grid and About's condensed recap share one source instead of duplicating it) — condensed to icon+title chips only, no descriptions, to avoid repeating Home's full Pillars grid.
+  - `TeamPlaceholder`: 2 generic role cards (no real names yet) with CSS-only initials avatars, captioned as illustrative — same placeholder-honesty pattern as Home's `PartnersStrip`.
+  - Added `about.{hero,mission,positioning,beliefs,pillarsRecap,team,brandPromise,ctaBand}` keys to both `messages/es.json` and `messages/en.json`.
+  - Verified: `npm run build`, `lint`, `typecheck`, `format` all pass clean; `/es/about` and `/en/about` both prerender via `generateStaticParams`. Visual verification via Playwright across mobile/tablet/desktop, both locales, no console errors/warnings — explicitly re-ran the same before/after-scroll opacity check from the Phase 4 review to confirm every reveal-gated section starts hidden and animates in correctly (the exact bug class fixed last phase).
+  - **Three fixes from user review, 2026-07-09:**
+    1. `PillarsRecap` had the same left-alignment bug as Phase 4's `PillarsGrid` (the `justify-center` fix wasn't carried over) — fixed, and upgraded each icon+title from bare inline text to a pill/chip (border + `bone-200` fill) since the plain-text version read as too bare next to the rest of the page.
+    2. **About Hero's left-aligned text left a large empty area on wide screens** (no visual counterweight, unlike Home's Hero). First attempt reused Home's exact SVG accent at lower opacity — called out by the user as lazy and, more importantly, _geometrically wrong_: it used a rounded corner (`Q` curve) where the actual logo mark (§8) has a sharp angled corner. Investigating a replacement surfaced a real asset defect: **`public/images/logo/decorative/frame-gradient-{orange,mint}.png` had the full "Estrenos LATAM" wordmark baked in at very low opacity** — invisible on pure white, but visible as ghosting on our `bone-100` background. Confirmed via pixel-level analysis (not a rendering bug on our end), then fixed by masking out just the wordmark region in both files (bracket geometry/gradient/dot untouched) and overwriting the originals in place — a real asset-library correction, not a one-page workaround.
+    3. Built an accurate hand-drawn vector recreation of the logo's two-arm angled bracket (sharp corners, matching the real mark) in `src/lib/route-frame.ts`, shared by both Hero components — Home's stays orange/animated (stroke-draw on mount), About's is a static, quieter mint version. Neither depends on the (still-imperfect-until-now) raster assets or on `bracket/`, which is reserved for a future favicon use. **Rule going forward: don't approximate brand geometry from memory — check the actual asset before redrawing a motif "inspired by" it.**
 
 ## 27. Current Task
 
-Phase 4 complete, pending user review/approval before Phase 5 (About) begins.
+Phase 5 complete, pending user review/approval before Phase 6 (Services) begins.
 
 ## 28. Pending Tasks
 
-- Phase 5 onward per roadmap (§18): About, Services, Markets, Partners, Insights, Contact.
+- Phase 6 onward per roadmap (§18): Services, Markets, Partners, Insights, Contact.
 - Swap `PartnersStrip`/`InsightsPreview` placeholder content for real data once Phases 8/9 build those sections.
 - Swap `StatsBand` placeholder numbers for real figures once available.
+- Swap `TeamPlaceholder`'s generic role cards for real team member names/photos once available.
 - Before launch: confirm real footer phone/address (if wanted) and real social media URLs (currently `href="#"` placeholders).
 
 ## 29. Changelog
@@ -373,6 +389,8 @@ Phase 4 complete, pending user review/approval before Phase 5 (About) begins.
 - **2026-07-08** — Phase 2: type scale finalized, WCAG AA color-contrast bugs fixed, Input/Textarea/Label/FormField/Card primitives + Motion variants/hooks built, temporary design-system review page shipped.
 - **2026-07-08** — Phase 3: Header/Footer/LocaleSwitcher/CTASection built and wired into the root layout; Sheet primitive added for mobile nav; temporary design-system page deleted.
 - **2026-07-09** — Phase 4: real Homepage built (Hero, Pillars grid, Market teaser, Stats band, Partners strip, Insights preview, CTA band), replacing the Phase 1 placeholder; design spec committed first per the brainstorming workflow.
+- **2026-07-09** — Phase 4 review fixes: Pillars grid layout centers its odd last row instead of leaving dead space; Partners/Insights sections now share the site-wide scroll-reveal animation instead of appearing static.
+- **2026-07-09** — Phase 5: About page built (Mission statement, Positioning, Beliefs list, Pillars recap, Team placeholder, Brand promise, CTA), sourced directly from the brand philosophy doc in §4; `PILLAR_ICONS` extracted to `src/content/pillar-icons.ts` for reuse between Home and About.
 
 ## 30. Technical Debt
 
