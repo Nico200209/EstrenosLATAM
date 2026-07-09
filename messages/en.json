@@ -142,5 +142,48 @@
       "subtext": "Tell us what content you want to bring to Central America, Panama, or the Caribbean.",
       "ctaLabel": "Let's talk"
     }
+  },
+  "services": {
+    "hero": {
+      "eyebrow": "Services",
+      "title": "One operational process, seven concrete steps.",
+      "lede": "From entry strategy to final quality control, this is how we execute every release across Central America, Panama, and the Caribbean."
+    },
+    "intro": "Every release goes through the same process, built to minimize risk and maximize the result in theaters.",
+    "items": {
+      "strategicConsulting": {
+        "title": "Strategic Consulting",
+        "description": "We define entry strategy, positioning, and launch plans for each market, before moving a single operational piece."
+      },
+      "partnerSelection": {
+        "title": "Partner Selection",
+        "description": "We evaluate and select distributors based on their real performance in each territory, not just their commercial reach."
+      },
+      "costOptimization": {
+        "title": "Cost Optimization",
+        "description": "We review every stage of distribution to reduce costs without sacrificing quality or missing deadlines."
+      },
+      "materialsManagement": {
+        "title": "Materials Management",
+        "description": "We coordinate technical and creative materials, making sure they arrive complete, on time, and in the right format."
+      },
+      "dcpExecution": {
+        "title": "DCP Execution",
+        "description": "We directly supervise DCP execution, from delivery through to projection in theaters."
+      },
+      "multiTerritoryCoordination": {
+        "title": "Multi-Territory Coordination",
+        "description": "We synchronize operations across Central America, Panama, and the Caribbean as a single process, not isolated shipments."
+      },
+      "qualityAssurance": {
+        "title": "Quality Assurance",
+        "description": "We check timing, quality, and execution at every stage, keeping the project ready for a studio audit at any moment."
+      }
+    },
+    "ctaBand": {
+      "heading": "Let's talk about your next release.",
+      "subtext": "Tell us what content you want to bring to Central America, Panama, or the Caribbean.",
+      "ctaLabel": "Let's talk"
+    }
   }
 }

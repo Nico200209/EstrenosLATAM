@@ -13,18 +13,21 @@ Copy note: descriptions are expanded from the existing one-line brand-doc seeds,
 New route: `src/app/[locale]/services/page.tsx`, mirroring Home/About's pattern (`generateStaticParams` mapping `routing.locales`, `setRequestLocale(locale)` in the page body, no `generateMetadata` yet per §13/Phase 11).
 
 New components under `src/components/sections/`:
+
 - `services-hero.tsx`, server, same restrained treatment as `about-hero.tsx` (eyebrow, `text-h1`, lede, bone background, no decorative accent, that stays reserved for Home/About/Markets hero moments).
 - `services-workflow.tsx`, client (scroll-reveal), the numbered 7-step list.
 
 CTA band reuses existing `src/components/shared/cta-section.tsx`.
 
 Content model changes:
+
 - Extend `Service` type in `src/types/content.ts` with `descriptionKey: string`.
 - Add `src/content/service-icons.ts` (same pattern as the existing `src/content/pillar-icons.ts`) mapping each service id to a lucide icon: `strategic-consulting` to `Compass`, `partner-selection` to `Handshake`, `cost-optimization` to `PiggyBank`, `materials-management` to `Package`, `dcp-execution` to `HardDrive`, `multi-territory-coordination` to `Route`, `quality-assurance` to `ClipboardCheck`. Chosen to avoid literal film/reel iconography per §7.
 
 ## Content & Localization
 
 New `services.*` namespace in both `messages/es.json` and `messages/en.json`:
+
 - `services.hero.{eyebrow,title,lede}`
 - `services.intro`, a short paragraph framing the 7-step sequence
 - `services.items.<serviceId>.{title,description}` for all 7 services (title resolves the existing `labelKey` concept; description is new, expanded from CLAUDE.md §4's one-liners)

@@ -187,7 +187,7 @@ src/
       layout.tsx              Locale root layout (html/body, NextIntlClientProvider, Header, main, Footer)
       page.tsx                 Home (built Phase 4 — Hero, Pillars, Market teaser, Stats, Partners, Insights, CTA)
       about/                   Built Phase 5 — Mission, Positioning, Beliefs, Pillars recap, Team placeholder, Brand promise, CTA
-      services/                (Phase 6)
+      services/                Built Phase 6 — Hero, numbered 7-step workflow, CTA
       markets/                 (Phase 7)
       partners/                (Phase 8)
       insights/                (Phase 9)
@@ -243,7 +243,7 @@ Licensed Public Sans files were uploaded to `public/fonts/` on 2026-07-08 (full 
 3. **Reusable UI components (Header, Footer, Nav, LocaleSwitcher, CTASection)** — ✅ complete.
 4. **Homepage** — ✅ complete.
 5. **About** — ✅ complete.
-6. Services.
+6. **Services** — ✅ complete.
 7. Markets.
 8. Partners.
 9. Insights / Blog.
@@ -368,14 +368,24 @@ locales: `es` (default), `en`. `localePrefix: "always"` — every route is expli
     1. `PillarsRecap` had the same left-alignment bug as Phase 4's `PillarsGrid` (the `justify-center` fix wasn't carried over) — fixed, and upgraded each icon+title from bare inline text to a pill/chip (border + `bone-200` fill) since the plain-text version read as too bare next to the rest of the page.
     2. **About Hero's left-aligned text left a large empty area on wide screens** (no visual counterweight, unlike Home's Hero). First attempt reused Home's exact SVG accent at lower opacity — called out by the user as lazy and, more importantly, _geometrically wrong_: it used a rounded corner (`Q` curve) where the actual logo mark (§8) has a sharp angled corner. Investigating a replacement surfaced a real asset defect: **`public/images/logo/decorative/frame-gradient-{orange,mint}.png` had the full "Estrenos LATAM" wordmark baked in at very low opacity** — invisible on pure white, but visible as ghosting on our `bone-100` background. Confirmed via pixel-level analysis (not a rendering bug on our end), then fixed by masking out just the wordmark region in both files (bracket geometry/gradient/dot untouched) and overwriting the originals in place — a real asset-library correction, not a one-page workaround.
     3. Built an accurate hand-drawn vector recreation of the logo's two-arm angled bracket (sharp corners, matching the real mark) in `src/lib/route-frame.ts`, shared by both Hero components — Home's stays orange/animated (stroke-draw on mount), About's is a static, quieter mint version. Neither depends on the (still-imperfect-until-now) raster assets or on `bracket/`, which is reserved for a future favicon use. **Rule going forward: don't approximate brand geometry from memory — check the actual asset before redrawing a motif "inspired by" it.**
+  - **Further polish from user review, 2026-07-09:** Home's Hero accent was left at `top-0` (not centered) when About's was fixed, making Home look "off" by comparison — fixed to match (`top-1/2`/`-translate-y-1/2`, same as About). About read as "one huge white page" since its only dark band (`BrandPromise`) sat 6 sections deep — `BeliefsList` moved onto a carbon band (mirroring Home's `MarketTeaser` rhythm of an early dark moment) so About now has two dark bands instead of one, spread through the page. Home's Hero accent enlarged (`h-64/96` → `h-80/[32rem]`) and section top padding reduced (`py-24 md:py-32` → `py-12 md:py-16`) to close a large empty gap under the header.
+
+- **Phase 6 — Services (2026-07-09):**
+  - Design spec written and committed: `docs/superpowers/specs/2026-07-09-phase-6-services-design.md`.
+  - Built `src/app/[locale]/services/page.tsx` composing `ServicesHero` and `ServicesWorkflow`, plus the existing `CTASection` (`variant="carbon"`).
+  - `ServicesWorkflow` presents the 7 "¿Cómo operamos?" offerings as a numbered (01–07) sequential list rather than a uniform card grid, since the offerings are inherently ordered (strategic consulting → partner selection → cost optimization → materials management → DCP execution → multi-territory coordination → QA) — leans into §7's timeline/workflow-diagram visual metaphor and gives Services its own identity distinct from Home's Pillars grid.
+  - `Service` type (`src/types/content.ts`) extended with `descriptionKey`; `src/content/service-icons.ts` added (Compass, Handshake, PiggyBank, Package, HardDrive, Route, ClipboardCheck) mirroring the `pillar-icons.ts` pattern.
+  - Added `services.{hero,intro,items,ctaBand}` keys to both `messages/es.json` and `messages/en.json` — descriptions expanded from the one-line brand-doc seeds in §4, written with no em dashes per explicit user instruction (an AI-writing tell; saved as a standing preference).
+  - Verified: `npm run build`, `lint`, `typecheck`, `format` all pass clean; `/es/services` and `/en/services` prerender. Visual verification via Playwright across mobile/tablet/desktop, both locales, no console errors/warnings; explicit before/after-scroll opacity check confirmed the workflow list's reveal animation is wired correctly.
+  - **Fixes from user review, 2026-07-09:** The Services Hero initially reused Home/About's bracket motif at low opacity, called out as repetitive for a third page — replaced with its own signature, `src/components/sections/services-step-path.tsx`, an ascending 7-node staircase (one node per service step, last one solid/highlighted) animated the same way as Home's Hero. Building this surfaced a pre-existing bug shared by **all three** hero accents (Home, About, Services): on narrow mobile widths the headline wraps to 4–5 lines and collides with the absolutely-positioned decorative accent. Fixed by hiding the accent below `md:` on all three (`hidden md:block`). **Rule going forward: any absolutely-positioned decorative hero accent needs an explicit mobile check against the real (often multi-line) headline copy, not just desktop.**
 
 ## 27. Current Task
 
-Phase 5 complete, pending user review/approval before Phase 6 (Services) begins.
+Phase 6 complete, pending user review/approval before Phase 7 (Markets) begins.
 
 ## 28. Pending Tasks
 
-- Phase 6 onward per roadmap (§18): Services, Markets, Partners, Insights, Contact.
+- Phase 7 onward per roadmap (§18): Markets, Partners, Insights, Contact.
 - Swap `PartnersStrip`/`InsightsPreview` placeholder content for real data once Phases 8/9 build those sections.
 - Swap `StatsBand` placeholder numbers for real figures once available.
 - Swap `TeamPlaceholder`'s generic role cards for real team member names/photos once available.
@@ -391,6 +401,9 @@ Phase 5 complete, pending user review/approval before Phase 6 (Services) begins.
 - **2026-07-09** — Phase 4: real Homepage built (Hero, Pillars grid, Market teaser, Stats band, Partners strip, Insights preview, CTA band), replacing the Phase 1 placeholder; design spec committed first per the brainstorming workflow.
 - **2026-07-09** — Phase 4 review fixes: Pillars grid layout centers its odd last row instead of leaving dead space; Partners/Insights sections now share the site-wide scroll-reveal animation instead of appearing static.
 - **2026-07-09** — Phase 5: About page built (Mission statement, Positioning, Beliefs list, Pillars recap, Team placeholder, Brand promise, CTA), sourced directly from the brand philosophy doc in §4; `PILLAR_ICONS` extracted to `src/content/pillar-icons.ts` for reuse between Home and About.
+- **2026-07-09** — Phase 5 review fixes: accurate vector bracket motif (`src/lib/route-frame.ts`) replacing a geometrically-wrong rounded-corner SVG on both Hero components; `decorative/frame-gradient-{orange,mint}.png` cleaned of a hidden wordmark defect; Home/About Hero accents vertically centered and resized; `BeliefsList` moved to a carbon band for earlier visual rhythm on About.
+- **2026-07-09** — Phase 6: Services page built (Hero, numbered 7-step workflow with icons, CTA), presenting the "¿Cómo operamos?" offerings as a sequential process rather than a uniform grid; `Service` type extended with `descriptionKey`, `src/content/service-icons.ts` added.
+- **2026-07-09** — Phase 6 review fixes: Services Hero got its own visual signature (`src/components/sections/services-step-path.tsx`, an ascending 7-node staircase) instead of reusing Home/About's bracket motif a third time. Fixing it surfaced a pre-existing bug shared by **all three** hero accents (Home, About, Services): on narrow mobile widths, headlines wrap to 4–5 lines and collide with the absolutely-positioned decorative accent. Fixed by hiding the accent below `md:` on all three (`hidden md:block`) rather than trying to shrink/reposition it further. **Rule going forward: any absolutely-positioned decorative accent needs an explicit mobile check with the real (often multi-line) headline copy, not just desktop — don't assume a fixed pixel size that worked at one viewport scales down safely.**
 
 ## 30. Technical Debt
 

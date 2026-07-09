@@ -7,6 +7,7 @@ export type Pillar = {
 export type Service = {
   id: string;
   labelKey: string;
+  descriptionKey: string;
 };
 
 export type Market = {

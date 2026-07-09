@@ -63,7 +63,7 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden px-6 py-12 md:py-16">
-      <div className="pointer-events-none absolute top-1/2 right-0 h-80 w-80 -translate-y-1/2 opacity-20 md:h-[32rem] md:w-[32rem] md:opacity-30">
+      <div className="pointer-events-none absolute top-1/2 right-0 hidden h-80 w-80 -translate-y-1/2 opacity-20 md:block md:h-[32rem] md:w-[32rem] md:opacity-30">
         <RouteLineMotif />
       </div>
       <div className="relative mx-auto flex max-w-6xl flex-col items-start gap-8 text-left">

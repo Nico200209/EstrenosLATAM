@@ -142,5 +142,48 @@
       "subtext": "Contanos qué contenido querés llevar a Centroamérica, Panamá o el Caribe.",
       "ctaLabel": "Hablemos"
     }
+  },
+  "services": {
+    "hero": {
+      "eyebrow": "Servicios",
+      "title": "Un proceso operativo, siete pasos concretos.",
+      "lede": "Desde la estrategia de entrada hasta el control de calidad final, así ejecutamos cada estreno en Centroamérica, Panamá y el Caribe."
+    },
+    "intro": "Cada estreno pasa por el mismo proceso, pensado para minimizar el riesgo y maximizar el resultado en sala.",
+    "items": {
+      "strategicConsulting": {
+        "title": "Consultoría Estratégica",
+        "description": "Definimos la estrategia de entrada, posicionamiento y lanzamiento para cada mercado, antes de mover una sola pieza operativa."
+      },
+      "partnerSelection": {
+        "title": "Selección de Socios",
+        "description": "Evaluamos y seleccionamos distribuidores según su desempeño real en cada territorio, no solo su alcance comercial."
+      },
+      "costOptimization": {
+        "title": "Optimización de Costos",
+        "description": "Revisamos cada etapa de la distribución para reducir costos sin sacrificar calidad ni cumplimiento de plazos."
+      },
+      "materialsManagement": {
+        "title": "Gestión de Materiales",
+        "description": "Coordinamos materiales técnicos y creativos, asegurando que lleguen completos, a tiempo y en el formato correcto."
+      },
+      "dcpExecution": {
+        "title": "Ejecución de DCP",
+        "description": "Supervisamos directamente la ejecución del DCP, desde la entrega hasta la proyección en sala."
+      },
+      "multiTerritoryCoordination": {
+        "title": "Coordinación Multi-Territorio",
+        "description": "Sincronizamos operaciones en Centroamérica, Panamá y el Caribe como un solo proceso, no como envíos aislados."
+      },
+      "qualityAssurance": {
+        "title": "Control de Calidad",
+        "description": "Verificamos timing, calidad y ejecución en cada etapa, dejando el proyecto listo para una auditoría de estudio en cualquier momento."
+      }
+    },
+    "ctaBand": {
+      "heading": "Hablemos de tu próximo estreno.",
+      "subtext": "Contanos qué contenido querés llevar a Centroamérica, Panamá o el Caribe.",
+      "ctaLabel": "Hablemos"
+    }
   }
 }
