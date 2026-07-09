@@ -72,7 +72,8 @@
       "placeholder2": "National Exhibitor",
       "placeholder3": "Multiplex Chain",
       "placeholder4": "Technical Supplier",
-      "placeholder5": "Independent Distributor"
+      "placeholder5": "Independent Distributor",
+      "cta": "View partners"
     },
     "insights": {
       "heading": "Insights",
@@ -239,6 +240,54 @@
       "eyebrow": "Regional coordination",
       "heading": "One operational standard across all three territories.",
       "body": "Every market has its own dynamics, but execution follows a single process, controlled end to end, so no territory is left to chance."
+    },
+    "ctaBand": {
+      "heading": "Let's talk about your next release.",
+      "subtext": "Tell us what content you want to bring to Central America, Panama, or the Caribbean.",
+      "ctaLabel": "Let's talk"
+    }
+  },
+  "partners": {
+    "hero": {
+      "eyebrow": "Partners",
+      "title": "A network built on performance, not reach.",
+      "lede": "Distributors, exhibitors, and technical suppliers evaluated on how they execute in each territory, not just their size in the market."
+    },
+    "philosophy": {
+      "eyebrow": "How we choose",
+      "heading": "Partner selection is an operational decision, not a commercial one.",
+      "body": "We evaluate real theatrical performance, fit with each territory, and the ability to sustain the execution standard a release demands. A partner joins the network once they've shown they can deliver the result, not just promise it."
+    },
+    "grid": {
+      "caption": "Illustrative example of the partner network. Real names coming soon.",
+      "categories": {
+        "distributors": {
+          "label": "Distributors",
+          "chips": {
+            "chip1": "Regional Distributor",
+            "chip2": "National Distributor",
+            "chip3": "Digital Distributor",
+            "chip4": "Independent Distributor"
+          }
+        },
+        "exhibitors": {
+          "label": "Exhibitors",
+          "chips": {
+            "chip1": "Multiplex Chain",
+            "chip2": "Independent Cinema",
+            "chip3": "Regional Circuit",
+            "chip4": "Boutique Theater"
+          }
+        },
+        "technicalSuppliers": {
+          "label": "Technical Suppliers",
+          "chips": {
+            "chip1": "DCP Provider",
+            "chip2": "Materials Lab",
+            "chip3": "Logistics Provider"
+          }
+        }
+      }
     },
     "ctaBand": {
       "heading": "Let's talk about your next release.",

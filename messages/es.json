@@ -72,7 +72,8 @@
       "placeholder2": "Exhibidor Nacional",
       "placeholder3": "Cadena Multiplex",
       "placeholder4": "Proveedor Técnico",
-      "placeholder5": "Distribuidor Independiente"
+      "placeholder5": "Distribuidor Independiente",
+      "cta": "Ver partners"
     },
     "insights": {
       "heading": "Insights",
@@ -239,6 +240,54 @@
       "eyebrow": "Coordinación regional",
       "heading": "Un mismo estándar operativo en los tres territorios.",
       "body": "Cada mercado tiene su propia dinámica, pero la ejecución responde a un mismo proceso, controlado de punta a punta, para que ningún territorio quede librado al azar."
+    },
+    "ctaBand": {
+      "heading": "Hablemos de tu próximo estreno.",
+      "subtext": "Contanos qué contenido querés llevar a Centroamérica, Panamá o el Caribe.",
+      "ctaLabel": "Hablemos"
+    }
+  },
+  "partners": {
+    "hero": {
+      "eyebrow": "Partners",
+      "title": "Una red construida sobre desempeño, no sobre alcance.",
+      "lede": "Distribuidores, exhibidores y proveedores técnicos evaluados por cómo ejecutan en cada territorio, no solo por su tamaño en el mercado."
+    },
+    "philosophy": {
+      "eyebrow": "Cómo elegimos",
+      "heading": "La selección de socios es una decisión operativa, no comercial.",
+      "body": "Evaluamos desempeño real en sala, ajuste con cada territorio y capacidad de sostener los estándares de ejecución que un estreno exige. Un socio se suma a la red cuando demuestra que puede sostener el resultado, no solo prometerlo."
+    },
+    "grid": {
+      "caption": "Ejemplo ilustrativo de la red de partners. Nombres reales próximamente.",
+      "categories": {
+        "distributors": {
+          "label": "Distribuidores",
+          "chips": {
+            "chip1": "Distribuidor Regional",
+            "chip2": "Distribuidor Nacional",
+            "chip3": "Distribuidor Digital",
+            "chip4": "Distribuidor Independiente"
+          }
+        },
+        "exhibitors": {
+          "label": "Exhibidores",
+          "chips": {
+            "chip1": "Cadena Multiplex",
+            "chip2": "Cine Independiente",
+            "chip3": "Circuito Regional",
+            "chip4": "Sala Boutique"
+          }
+        },
+        "technicalSuppliers": {
+          "label": "Proveedores Técnicos",
+          "chips": {
+            "chip1": "Proveedor de DCP",
+            "chip2": "Laboratorio de Materiales",
+            "chip3": "Proveedor Logístico"
+          }
+        }
+      }
     },
     "ctaBand": {
       "heading": "Hablemos de tu próximo estreno.",

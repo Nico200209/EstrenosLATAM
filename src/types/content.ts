@@ -19,3 +19,9 @@ export type Market = {
   countryKeys: string[];
   highlightIds: MarketHighlightId[];
 };
+
+export type PartnerCategory = {
+  id: string;
+  labelKey: string;
+  chipKeys: string[];
+};

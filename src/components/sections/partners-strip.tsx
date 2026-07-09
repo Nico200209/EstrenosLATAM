@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 
 import { useReducedMotionPreference } from "@/hooks/use-reduced-motion";
+import { Link } from "@/i18n/navigation";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 
 const PLACEHOLDER_KEYS = [
@@ -52,6 +53,14 @@ export function PartnersStrip() {
         >
           {t("caption")}
         </motion.p>
+        <motion.div variants={fadeInUp} transition={reducedMotion ? { duration: 0 } : undefined}>
+          <Link
+            href="/partners"
+            className="text-primary-700 text-small font-medium underline-offset-4 hover:underline"
+          >
+            {t("cta")}
+          </Link>
+        </motion.div>
       </motion.div>
     </section>
   );

@@ -189,7 +189,7 @@ src/
       about/                   Built Phase 5 — Mission, Positioning, Beliefs, Pillars recap, Team placeholder, Brand promise, CTA
       services/                Built Phase 6 — Hero, numbered 7-step workflow, CTA
       markets/                 Built Phase 7 — Hero (territory-outline accent), numbered territory profiles, coordination band, CTA
-      partners/                (Phase 8)
+      partners/                Built Phase 8 — Hero (network-hub accent), philosophy band, categorized partner grid, CTA
       insights/                (Phase 9)
       contact/                 (Phase 10)
   components/
@@ -250,7 +250,7 @@ Licensed Public Sans files were uploaded to `public/fonts/` on 2026-07-08 (full 
 5. **About** — ✅ complete.
 6. **Services** — ✅ complete.
 7. **Markets** — ✅ complete.
-8. Partners.
+8. **Partners** — ✅ complete.
 9. Insights / Blog.
 10. Contact.
 11. SEO.
@@ -396,17 +396,28 @@ locales: `es` (default), `en`. `localePrefix: "always"` — every route is expli
   - **Second revision, same session**: the initial real-map version still connected the three territories with a single arc rotating sequentially around the loop (CA→Panama→Panama→Caribbean→Caribbean→CA→…), which read as "going around in a circle" rather than showing mutual connection. Rebuilt around a turn-based model instead — `TURNS` in `markets-territory-outline.tsx` gives each territory a turn as the broadcasting hub, drawing **two** arcs simultaneously from that hub to the other two (both paths' `M` origin is the active hub, so `pathLength` growth visibly radiates outward from it), holds, fades, then the next territory's turn begins. 3 turns × 2 arcs on a shared 6s cycle. Reduced motion shows all 6 arcs simultaneously, fully drawn, static.
   - **Reused on the Homepage**: `MarketsTerritoryOutline` gained a `variant: "light" | "dark"` prop (controls only the faint neighboring-country context styling; the highlighted territories/arcs stay mint on both) and now replaces Home's original hand-drawn 3-node/straight-line SVG in `src/components/sections/market-teaser.tsx` (`variant="dark"` against `bg-carbon-900`) — the same real map and broadcast-arc animation appears in both places instead of two different market visuals. `NODE_POSITIONS`/`ROUTE_PATH` removed from `market-teaser.tsx` as dead code.
 
+- **Phase 8 — Partners (2026-07-09):**
+  - Design spec written and committed: `docs/superpowers/specs/2026-07-09-phase-8-partners-design.md`.
+  - Built `src/app/[locale]/partners/page.tsx` composing `PartnersHero`, `PartnersPhilosophy`, `PartnersGrid`, plus the existing `CTASection` (`variant="carbon"`, mirroring Services' bone→carbon close).
+  - No real partner logos/data exist yet (confirmed with user before starting), so the page uses the same honest-placeholder pattern as Home's `PartnersStrip`/About's `TeamPlaceholder`: generic role/category labels (e.g. "Distribuidor Regional", "Cadena Multiplex", "Proveedor de DCP"), never invented company names, explicitly captioned as illustrative.
+  - New `PartnerCategory` type (`src/types/content.ts`) and `src/content/partners.ts`: 3 categories (distributors, exhibitors, technical-suppliers) with `chipKeys: string[]`, mirroring `Market`'s `countryKeys` convention rather than a bare placeholder count. `technical-suppliers` extends the IA's distributor/exhibitor pair with a third category tying back to Services' materials/DCP offerings.
+  - New hero accent `src/components/sections/partners-network-hub.tsx`: a central hub node (the brand) with 7 spokes radiating out to partner nodes, orange (`primary-500`, per §9's connection/decision color rule), spokes draw in staggered outward from the hub, outer nodes fade in as their spoke completes, hub pulses subtly — a fifth distinct hero-accent device (not a bracket, staircase, or map). `hidden md:block` applied proactively from the start.
+  - `PartnersGrid` is the first placeholder-content component built with the site-wide scroll-reveal convention from the start (`TeamPlaceholder` still lacks it — a pre-existing gap, not fixed in this phase since it was out of scope).
+  - Added `partners.{hero,philosophy,grid,ctaBand}` keys to both `messages/es.json` and `messages/en.json`, plus `home.partners.cta` for a new "Ver partners"/"View partners" link added to `partners-strip.tsx`, matching `MarketTeaser`'s existing link-to-full-page convention now that `/partners` exists.
+  - Verified: `npm run build`, `lint`, `typecheck`, `format` all pass clean; `/es/partners` and `/en/partners` prerender. Visual verification via Playwright across mobile/tablet-portrait/desktop, both locales, no console errors/warnings; explicit mobile hero-accent collision check; reduced-motion emulation confirmed the hub-and-spoke accent settles to a fully solid, static state; confirmed the grid's illustrative caption and Home's new link both render correctly.
+
 ## 27. Current Task
 
-Phase 7 complete, pending user review/approval before Phase 8 (Partners) begins.
+Phase 8 complete, pending user review/approval before Phase 9 (Insights/Blog) begins.
 
 ## 28. Pending Tasks
 
-- Phase 8 onward per roadmap (§18): Partners, Insights, Contact.
-- Swap `PartnersStrip`/`InsightsPreview` placeholder content for real data once Phases 8/9 build those sections.
+- Phase 9 onward per roadmap (§18): Insights, Contact.
+- Swap `PartnersStrip`/`InsightsPreview`/`PartnersGrid` placeholder content for real data once real partner logos/names and Phase 9 content are available.
 - Swap `StatsBand` placeholder numbers for real figures once available.
 - Swap `TeamPlaceholder`'s generic role cards for real team member names/photos once available.
 - Confirm the Caribbean's actual operational scope before launch — current copy names 2 representative markets (República Dominicana/Dominican Republic, Puerto Rico) captioned as expanding coverage, not a confirmed final list (see §31).
+- Consider adding scroll-reveal animation to `TeamPlaceholder` for consistency with every other placeholder section (`PartnersStrip`, `PartnersGrid`) — a pre-existing gap noted but not fixed during Phase 8.
 - Before launch: confirm real footer phone/address (if wanted) and real social media URLs (currently `href="#"` placeholders).
 
 ## 29. Changelog
@@ -425,6 +436,7 @@ Phase 7 complete, pending user review/approval before Phase 8 (Partners) begins.
 - **2026-07-09** — Phase 7: Markets page built (Hero with a new territory-outline SVG accent, numbered per-territory profiles with country chips and network/logistics/intelligence highlights, carbon coordination band, CTA). Applied the Phase 6 hero-accent mobile-collision fix proactively from the start instead of retroactively. `Market` type extended with `countryKeys`/`highlightIds`; `src/content/market-icons.ts` added, reusing existing Pillars/Services icons rather than a new icon set.
 - **2026-07-09** — Phase 7 review fix: Markets hero accent rebuilt from an abstract low-poly map metaphor (rejected by user review) to an actually accurate map — `world-atlas`/`d3-geo`/`topojson-client` added as devDependencies, `scripts/generate-markets-map.mjs` precomputes real Natural Earth country boundaries into static SVG path data (`src/lib/markets-map-data.ts`), and the connecting route lines were changed from a continuous line to three sequential "hop" arcs (draw, hold, fade, one at a time).
 - **2026-07-09** — Second Phase 7 review fix: replaced the single-arc rotating loop with a turn-based model where each territory broadcasts two arcs simultaneously to the other two before the next territory's turn; `MarketsTerritoryOutline` gained a `light`/`dark` variant and now also replaces Home's `MarketTeaser` hand-drawn SVG, so the real map + broadcast-arc animation is shared between Home and Markets instead of two different visuals.
+- **2026-07-09** — Phase 8: Partners page built (Hero with a new hub-and-spoke network SVG accent, philosophy band, categorized placeholder partner grid, CTA), using the same honest-placeholder pattern as `PartnersStrip`/`TeamPlaceholder` since no real partner data exists yet; `PartnerCategory` type and `src/content/partners.ts` added; Home's `PartnersStrip` gained a link to the new `/partners` page.
 
 ## 30. Technical Debt
 
@@ -437,7 +449,7 @@ Phase 7 complete, pending user review/approval before Phase 8 (Partners) begins.
 ## 31. Questions for Me
 
 1. For the Insights/Blog section (Phase 9): do you want a simple local content source (MDX/JSON in-repo) or a headless CMS integration? Affects Phase 9 architecture decisions.
-2. Do you have real partner/distributor logos and market-specific data (e.g., named exhibitors) ready for Phase 8, or should that phase proceed with placeholder structure only? Related: Markets' Caribbean territory currently names 2 representative markets (República Dominicana/Dominican Republic, Puerto Rico) captioned as "cobertura en expansión"/"coverage expanding" — confirm the real scope before launch (§28).
+2. ~~Do you have real partner/distributor logos and market-specific data ready for Phase 8?~~ Confirmed 2026-07-09: not yet — Phase 8 (Partners) built with placeholder structure only, same pattern as `PartnersStrip`/`TeamPlaceholder`; swap for real data when available (§28). Related, still open: Markets' Caribbean territory currently names 2 representative markets (República Dominicana/Dominican Republic, Puerto Rico) captioned as "cobertura en expansión"/"coverage expanding" — confirm the real scope before launch (§28).
 3. Any existing domain/hosting target (Vercel vs. other) that should influence performance/deployment assumptions in Phase 12?
 4. ~~Do you want real footer phone/address, and do the LinkedIn/Instagram accounts referenced in the footer already exist?~~ Confirmed 2026-07-08: not needed right now — footer stays with email only and `href="#"` social placeholders; revisit before launch.
 
