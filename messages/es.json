@@ -185,5 +185,65 @@
       "subtext": "Contanos qué contenido querés llevar a Centroamérica, Panamá o el Caribe.",
       "ctaLabel": "Hablemos"
     }
+  },
+  "markets": {
+    "hero": {
+      "eyebrow": "Mercados",
+      "title": "Tres territorios, una sola operación.",
+      "lede": "Centroamérica, Panamá y el Caribe no son mercados aislados, son un mismo territorio operativo, coordinado desde la estrategia hasta la sala."
+    },
+    "highlightCategories": {
+      "network": { "label": "Red de distribución" },
+      "logistics": { "label": "Logística y DCP" },
+      "intelligence": { "label": "Inteligencia de mercado" }
+    },
+    "territories": {
+      "centralAmerica": {
+        "description": "Cinco mercados con dinámicas propias, coordinados como un solo proceso de entrada, selección de socios y ejecución.",
+        "countriesLabel": "Territorios cubiertos",
+        "countries": {
+          "country1": "Guatemala",
+          "country2": "Honduras",
+          "country3": "El Salvador",
+          "country4": "Nicaragua",
+          "country5": "Costa Rica"
+        },
+        "highlights": {
+          "network": "Distribuidores y exhibidores evaluados en cada país, no un socio único para toda la región.",
+          "logistics": "Coordinación de materiales y DCP ajustada a los tiempos de estreno de cada mercado.",
+          "intelligence": "Lectura de desempeño país por país, no promedios regionales que ocultan diferencias reales."
+        }
+      },
+      "panama": {
+        "description": "Mercado puente entre Centroamérica y el Caribe, con exigencias operativas propias por su rol regional.",
+        "countriesLabel": "Territorio cubierto",
+        "countries": { "country1": "Panamá" },
+        "highlights": {
+          "network": "Relación directa con exhibidores clave del territorio.",
+          "logistics": "Ejecución de DCP y materiales alineada con su función de nodo regional.",
+          "intelligence": "Monitoreo constante de desempeño en sala y comportamiento del público local."
+        }
+      },
+      "caribbean": {
+        "description": "Presencia inicial en mercados representativos, en expansión progresiva a medida que se confirman nuevos socios operativos.",
+        "countriesLabel": "Mercados representativos (cobertura en expansión)",
+        "countries": { "country1": "República Dominicana", "country2": "Puerto Rico" },
+        "highlights": {
+          "network": "Selección activa de distribuidores por mercado, sin asumir cobertura regional uniforme.",
+          "logistics": "Gestión de materiales adaptada a la logística insular de cada territorio.",
+          "intelligence": "Evaluación caso por caso antes de comprometer estrategia de lanzamiento."
+        }
+      }
+    },
+    "coordination": {
+      "eyebrow": "Coordinación regional",
+      "heading": "Un mismo estándar operativo en los tres territorios.",
+      "body": "Cada mercado tiene su propia dinámica, pero la ejecución responde a un mismo proceso, controlado de punta a punta, para que ningún territorio quede librado al azar."
+    },
+    "ctaBand": {
+      "heading": "Hablemos de tu próximo estreno.",
+      "subtext": "Contanos qué contenido querés llevar a Centroamérica, Panamá o el Caribe.",
+      "ctaLabel": "Hablemos"
+    }
   }
 }

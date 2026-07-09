@@ -10,8 +10,12 @@ export type Service = {
   descriptionKey: string;
 };
 
+export type MarketHighlightId = "network" | "logistics" | "intelligence";
+
 export type Market = {
   id: string;
   nameKey: string;
   region: "central-america" | "panama" | "caribbean";
+  countryKeys: string[];
+  highlightIds: MarketHighlightId[];
 };

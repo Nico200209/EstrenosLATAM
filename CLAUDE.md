@@ -188,7 +188,7 @@ src/
       page.tsx                 Home (built Phase 4 — Hero, Pillars, Market teaser, Stats, Partners, Insights, CTA)
       about/                   Built Phase 5 — Mission, Positioning, Beliefs, Pillars recap, Team placeholder, Brand promise, CTA
       services/                Built Phase 6 — Hero, numbered 7-step workflow, CTA
-      markets/                 (Phase 7)
+      markets/                 Built Phase 7 — Hero (territory-outline accent), numbered territory profiles, coordination band, CTA
       partners/                (Phase 8)
       insights/                (Phase 9)
       contact/                 (Phase 10)
@@ -208,9 +208,12 @@ src/
     fonts.ts                   Public Sans font loader (next/font/local, all 9 weights x normal/italic)
     motion.ts                  Reusable Motion variants (fadeIn, staggerContainer, textReveal, etc.)
     utils.ts                   cn() helper (shadcn-provided)
+    markets-map-data.ts         GENERATED — static SVG path data for the Markets hero map (see scripts/generate-markets-map.mjs, §17)
   types/
     content.ts                 Pillar/Service/Market types
   proxy.ts                     next-intl middleware (Next.js 16 "proxy" convention, replaces middleware.ts)
+scripts/
+  generate-markets-map.mjs     One-off generator: world-atlas/d3-geo TopoJSON -> src/lib/markets-map-data.ts static path data (Phase 7, §17)
 messages/
   es.json                     Spanish copy (default locale)
   en.json                     English copy
@@ -231,6 +234,8 @@ assets/
 - **`middleware.ts` → `src/proxy.ts`**: Next.js 16 deprecated the `middleware.ts` convention in favor of `proxy.ts` (same export shape). Already migrated to avoid the deprecation warning.
 - **Tailwind v4 CSS-first config**: there is no `tailwind.config.ts`; all theme extension (brand color scales) lives in `@theme` blocks inside `src/app/globals.css`. Any future Tailwind plugin config also belongs there, not in a JS/TS config file.
 - **Base UI composition prop is `render`, not `asChild`**: to make `Button` render as a `Link` (or any other element), pass `render={<Link .../>}` — and when the rendered element isn't a real `<button>` (e.g. an anchor), also pass `nativeButton={false}` or Base UI logs a dev-only console warning about lost native button semantics. Established in Phase 3's `Header`/`CTASection`; follow this pattern for any future Button-as-Link composition.
+- **Real map data, generated at build-time, not shipped as a runtime dependency**: Phase 7's Markets hero needed an actually accurate map (not a hand-drawn abstraction) per user review. `world-atlas` (Natural Earth country boundaries, 50m resolution), `d3-geo`, and `topojson-client` were added as **devDependencies only** and are never imported by app code. `scripts/generate-markets-map.mjs` runs them once (`node scripts/generate-markets-map.mjs`) to project the relevant countries (5 Central America + Panama + Dominican Republic/Puerto Rico, plus faint neighboring-country context) to static SVG path strings, committed to `src/lib/markets-map-data.ts` (a plain generated `.ts` file with no d3/topojson import). This keeps the browser bundle free of a geo library for what is ultimately a decorative accent (§23 performance goals) while still using real, licensable (ISC) geographic data instead of invented shapes. Re-run the script if the covered-territory list changes; do not hand-edit the generated file.
+- **`react-simple-maps` was considered and rejected**: its peer dependencies cap at React 18 (this project runs React 19); using `d3-geo`/`topojson-client` directly (framework-agnostic, no peer deps) avoided that risk entirely.
 
 ### Typography — Public Sans, self-hosted
 
@@ -244,7 +249,7 @@ Licensed Public Sans files were uploaded to `public/fonts/` on 2026-07-08 (full 
 4. **Homepage** — ✅ complete.
 5. **About** — ✅ complete.
 6. **Services** — ✅ complete.
-7. Markets.
+7. **Markets** — ✅ complete.
 8. Partners.
 9. Insights / Blog.
 10. Contact.
@@ -379,16 +384,29 @@ locales: `es` (default), `en`. `localePrefix: "always"` — every route is expli
   - Verified: `npm run build`, `lint`, `typecheck`, `format` all pass clean; `/es/services` and `/en/services` prerender. Visual verification via Playwright across mobile/tablet/desktop, both locales, no console errors/warnings; explicit before/after-scroll opacity check confirmed the workflow list's reveal animation is wired correctly.
   - **Fixes from user review, 2026-07-09:** The Services Hero initially reused Home/About's bracket motif at low opacity, called out as repetitive for a third page — replaced with its own signature, `src/components/sections/services-step-path.tsx`, an ascending 7-node staircase (one node per service step, last one solid/highlighted) animated the same way as Home's Hero. Building this surfaced a pre-existing bug shared by **all three** hero accents (Home, About, Services): on narrow mobile widths the headline wraps to 4–5 lines and collides with the absolutely-positioned decorative accent. Fixed by hiding the accent below `md:` on all three (`hidden md:block`). **Rule going forward: any absolutely-positioned decorative hero accent needs an explicit mobile check against the real (often multi-line) headline copy, not just desktop.**
 
+- **Phase 7 — Markets (2026-07-09):**
+  - Design spec written and committed: `docs/superpowers/specs/2026-07-09-phase-7-markets-design.md`.
+  - Built `src/app/[locale]/markets/page.tsx` composing `MarketsHero`, `TerritoryProfiles`, `MarketsCoordination`, plus the existing `CTASection` (`variant="bone"`, mirroring About's carbon→bone alternation off `MarketsCoordination`).
+  - `Market` type (`src/types/content.ts`) extended with `countryKeys: string[]` and `highlightIds: MarketHighlightId[]` (new `MarketHighlightId = "network" | "logistics" | "intelligence"`); `src/content/markets.ts` populated with real per-territory country lists (Central America: 5, Panama: 1, Caribbean: 2 representative) and `MARKET_HIGHLIGHT_CATEGORIES`. `src/content/market-icons.ts` added, deliberately **reusing** icons already assigned to the same concepts on Pillars/Services (`Network`, `HardDrive`, `BarChart3`) rather than inventing a fourth icon vocabulary.
+  - `TerritoryProfiles` presents the 3 territories as a numbered (01–03) sequential list (same structural precedent as `ServicesWorkflow`), each with description, a country-chip row (reusing `PillarsRecap`'s chip style), and a 3-column network/logistics/intelligence highlight sub-grid. Territory names are resolved from the existing `home.marketTeaser.<nameKey>` namespace rather than duplicated, the same pattern `PillarsRecap` uses for `home.pillars`.
+  - `MarketsCoordination`: carbon band, deliberately typographic-only (no SVG), to avoid a 4th map/route graphic competing on one page.
+  - Added `markets.{hero,highlightCategories,territories,coordination,ctaBand}` keys to both `messages/es.json` and `messages/en.json`. Caribbean's country list is explicitly captioned "cobertura en expansión"/"coverage expanding", per user decision, rather than implying full regional coverage or omitting country names entirely.
+  - Verified: `npm run build`, `lint`, `typecheck`, `format` all pass clean; `/es/markets` and `/en/markets` prerender. Visual verification via Playwright screenshots across mobile/tablet-portrait/desktop, both locales, no console errors/warnings; explicit mobile hero-accent collision check (headline wraps to 4 lines on mobile, accent stays hidden, no overlap); reduced-motion emulation confirmed everything settles to a fully solid, static state.
+  - **Hero accent revised twice from user review, 2026-07-09.** First pass shipped `src/components/sections/markets-territory-outline.tsx` as abstract, non-representational low-poly territory silhouettes (no map library was installed at that point) over a faint coordinate grid. User rejected this outright: rightly called it "just some random geometrical shapes," not a map, and asked for the real thing — an actual accurate map with route lines that visibly "jump" from one territory to another (draw in, hold, disappear) rather than a continuous connecting line. That required real geographic data, so `world-atlas`, `d3-geo`, and `topojson-client` were added as **devDependencies only** (never imported by app code — `react-simple-maps` was considered and rejected since its peer deps cap at React 18, this project runs 19). `scripts/generate-markets-map.mjs` projects Natural Earth country boundaries (Guatemala, Honduras, El Salvador, Nicaragua, Costa Rica, Panama, Dominican Republic, Puerto Rico, plus faint neighboring-country context: Mexico, Colombia, Venezuela, Cuba, Jamaica, Haiti, Belize) into static SVG path data, committed to `src/lib/markets-map-data.ts` (generated, no runtime geo-library import — keeps the browser bundle clean per §23). **Rule going forward: when a brief calls for "a map," check whether the user means a literal, geographically accurate one before defaulting to an abstract visual metaphor — the two read very differently and the gap isn't obvious from the brief alone.**
+  - **Second revision, same session**: the initial real-map version still connected the three territories with a single arc rotating sequentially around the loop (CA→Panama→Panama→Caribbean→Caribbean→CA→…), which read as "going around in a circle" rather than showing mutual connection. Rebuilt around a turn-based model instead — `TURNS` in `markets-territory-outline.tsx` gives each territory a turn as the broadcasting hub, drawing **two** arcs simultaneously from that hub to the other two (both paths' `M` origin is the active hub, so `pathLength` growth visibly radiates outward from it), holds, fades, then the next territory's turn begins. 3 turns × 2 arcs on a shared 6s cycle. Reduced motion shows all 6 arcs simultaneously, fully drawn, static.
+  - **Reused on the Homepage**: `MarketsTerritoryOutline` gained a `variant: "light" | "dark"` prop (controls only the faint neighboring-country context styling; the highlighted territories/arcs stay mint on both) and now replaces Home's original hand-drawn 3-node/straight-line SVG in `src/components/sections/market-teaser.tsx` (`variant="dark"` against `bg-carbon-900`) — the same real map and broadcast-arc animation appears in both places instead of two different market visuals. `NODE_POSITIONS`/`ROUTE_PATH` removed from `market-teaser.tsx` as dead code.
+
 ## 27. Current Task
 
-Phase 6 complete, pending user review/approval before Phase 7 (Markets) begins.
+Phase 7 complete, pending user review/approval before Phase 8 (Partners) begins.
 
 ## 28. Pending Tasks
 
-- Phase 7 onward per roadmap (§18): Markets, Partners, Insights, Contact.
+- Phase 8 onward per roadmap (§18): Partners, Insights, Contact.
 - Swap `PartnersStrip`/`InsightsPreview` placeholder content for real data once Phases 8/9 build those sections.
 - Swap `StatsBand` placeholder numbers for real figures once available.
 - Swap `TeamPlaceholder`'s generic role cards for real team member names/photos once available.
+- Confirm the Caribbean's actual operational scope before launch — current copy names 2 representative markets (República Dominicana/Dominican Republic, Puerto Rico) captioned as expanding coverage, not a confirmed final list (see §31).
 - Before launch: confirm real footer phone/address (if wanted) and real social media URLs (currently `href="#"` placeholders).
 
 ## 29. Changelog
@@ -404,6 +422,9 @@ Phase 6 complete, pending user review/approval before Phase 7 (Markets) begins.
 - **2026-07-09** — Phase 5 review fixes: accurate vector bracket motif (`src/lib/route-frame.ts`) replacing a geometrically-wrong rounded-corner SVG on both Hero components; `decorative/frame-gradient-{orange,mint}.png` cleaned of a hidden wordmark defect; Home/About Hero accents vertically centered and resized; `BeliefsList` moved to a carbon band for earlier visual rhythm on About.
 - **2026-07-09** — Phase 6: Services page built (Hero, numbered 7-step workflow with icons, CTA), presenting the "¿Cómo operamos?" offerings as a sequential process rather than a uniform grid; `Service` type extended with `descriptionKey`, `src/content/service-icons.ts` added.
 - **2026-07-09** — Phase 6 review fixes: Services Hero got its own visual signature (`src/components/sections/services-step-path.tsx`, an ascending 7-node staircase) instead of reusing Home/About's bracket motif a third time. Fixing it surfaced a pre-existing bug shared by **all three** hero accents (Home, About, Services): on narrow mobile widths, headlines wrap to 4–5 lines and collide with the absolutely-positioned decorative accent. Fixed by hiding the accent below `md:` on all three (`hidden md:block`) rather than trying to shrink/reposition it further. **Rule going forward: any absolutely-positioned decorative accent needs an explicit mobile check with the real (often multi-line) headline copy, not just desktop — don't assume a fixed pixel size that worked at one viewport scales down safely.**
+- **2026-07-09** — Phase 7: Markets page built (Hero with a new territory-outline SVG accent, numbered per-territory profiles with country chips and network/logistics/intelligence highlights, carbon coordination band, CTA). Applied the Phase 6 hero-accent mobile-collision fix proactively from the start instead of retroactively. `Market` type extended with `countryKeys`/`highlightIds`; `src/content/market-icons.ts` added, reusing existing Pillars/Services icons rather than a new icon set.
+- **2026-07-09** — Phase 7 review fix: Markets hero accent rebuilt from an abstract low-poly map metaphor (rejected by user review) to an actually accurate map — `world-atlas`/`d3-geo`/`topojson-client` added as devDependencies, `scripts/generate-markets-map.mjs` precomputes real Natural Earth country boundaries into static SVG path data (`src/lib/markets-map-data.ts`), and the connecting route lines were changed from a continuous line to three sequential "hop" arcs (draw, hold, fade, one at a time).
+- **2026-07-09** — Second Phase 7 review fix: replaced the single-arc rotating loop with a turn-based model where each territory broadcasts two arcs simultaneously to the other two before the next territory's turn; `MarketsTerritoryOutline` gained a `light`/`dark` variant and now also replaces Home's `MarketTeaser` hand-drawn SVG, so the real map + broadcast-arc animation is shared between Home and Markets instead of two different visuals.
 
 ## 30. Technical Debt
 
@@ -416,7 +437,7 @@ Phase 6 complete, pending user review/approval before Phase 7 (Markets) begins.
 ## 31. Questions for Me
 
 1. For the Insights/Blog section (Phase 9): do you want a simple local content source (MDX/JSON in-repo) or a headless CMS integration? Affects Phase 9 architecture decisions.
-2. Do you have real partner/distributor logos and market-specific data (e.g., named exhibitors) ready for Phases 7–8, or should those phases proceed with placeholder structure only?
+2. Do you have real partner/distributor logos and market-specific data (e.g., named exhibitors) ready for Phase 8, or should that phase proceed with placeholder structure only? Related: Markets' Caribbean territory currently names 2 representative markets (República Dominicana/Dominican Republic, Puerto Rico) captioned as "cobertura en expansión"/"coverage expanding" — confirm the real scope before launch (§28).
 3. Any existing domain/hosting target (Vercel vs. other) that should influence performance/deployment assumptions in Phase 12?
 4. ~~Do you want real footer phone/address, and do the LinkedIn/Instagram accounts referenced in the footer already exist?~~ Confirmed 2026-07-08: not needed right now — footer stays with email only and `href="#"` social placeholders; revisit before launch.
 
